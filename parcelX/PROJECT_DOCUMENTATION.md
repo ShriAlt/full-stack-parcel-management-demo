@@ -561,26 +561,11 @@ Important fields:
 | Payment | `src/app/payment/payment.component.ts` |
 | Profile | `src/app/dashboard/user-profile.component.ts` |
 
-## Build and Test Commands
-
-### Backend
-
-```bash
-cd parcelx-backend
-mvn test
-```
-
-### Frontend
+## Build Commands
 
 ```bash
 cd parcelx-frontend
 npm run build
-```
-
-Angular unit tests can be started with:
-
-```bash
-npm test
 ```
 
 ## Development Notes
