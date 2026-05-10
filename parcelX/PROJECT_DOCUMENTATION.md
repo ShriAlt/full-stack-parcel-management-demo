@@ -1,8 +1,8 @@
-# parcelX Project Documentation
+# Parecel Management Syatem Project Documentation
 
 ## Overview
 
-`parcelX` is a full-stack parcel management demo application. It combines an Angular 17 single-page application with a Spring Boot 3 REST API and a MySQL database. The application covers the core parcel lifecycle: user registration, login, parcel booking, payment, tracking, order management, cancellation, feedback, and administrator operations.
+`Parecel Management Syatem` is a full-stack parcel management demo application. It combines an Angular 17 single-page application with a Spring Boot 3 REST API and a MySQL database. The application covers the core parcel lifecycle: user registration, login, parcel booking, payment, tracking, order management, cancellation, feedback, and administrator operations.
 
 The repository is organized as:
 
@@ -10,6 +10,9 @@ The repository is organized as:
 parcelX/
   database/
     schema.sql
+  outputs/
+    defectlogs/
+      DefectLogs_Functional_Defects.xlsx
   parcelx-backend/
     Spring Boot REST API
   parcelx-frontend/
@@ -162,12 +165,10 @@ The backend also seeds one sample parcel when the parcel table is empty.
 
 ## Application Roles
 
-The `User.Role` enum currently defines:
+The `User.Role` enum defines:
 
 - `ADMIN`
 - `CUSTOMER`
-
-Several backend authorization rules also reference `DELIVERY_AGENT` for future expansion, but the current `User` entity enum does not define a delivery-agent role.
 
 The frontend role helper maps the user-facing customer role to route access for customer pages and the admin role to admin pages.
 
@@ -293,7 +294,8 @@ The payment page supports:
 The admin dashboard is a tabbed workspace with:
 
 - Dashboard stats for parcels, delivered parcels, in-transit parcels, and users.
-- All Orders table with search, weight sorting, pagination, detail modal, and status update.
+- All Orders table with search, weight sorting, pagination, payment status, detail modal, and status update.
+- Parcel status updates are available to admins only after payment is confirmed.
 - Book Parcel form using the same booking endpoint.
 - Users table with search and user-order lookup.
 - Feedback list.
@@ -322,7 +324,7 @@ All protected endpoints require `Authorization: Bearer <token>`.
 
 | Method | Endpoint | Access | Purpose |
 | --- | --- | --- | --- |
-| `POST` | `/api/parcels` | Customer | Book a parcel |
+| `POST` | `/api/parcels` | Customer/Admin | Book a parcel |
 | `GET` | `/api/parcels` | Customer | List current customer's parcels |
 | `GET` | `/api/parcels/{id}` | Admin/Customer | Fetch parcel by ID |
 | `GET` | `/api/parcels/track/{trackingId}` | Admin/Customer | Track by tracking ID |
@@ -577,3 +579,9 @@ npm run build
 - `database/schema.sql` is a reference schema. The live local schema may differ if Hibernate has already updated it through `ddl-auto=update`.
 - Do not commit real `.env` secrets.
 - Use a long JWT secret in local and deployed environments.
+
+## Project Artifacts
+
+| Artifact | Location | Purpose |
+| --- | --- | --- |
+| Functional defect log | `outputs/defectlogs/DefectLogs_Functional_Defects.xlsx` | Tracks open and closed functional defects with module, steps, severity, priority, status, owner, dates, and remarks. |
