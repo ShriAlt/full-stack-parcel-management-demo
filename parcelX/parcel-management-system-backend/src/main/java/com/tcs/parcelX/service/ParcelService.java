@@ -2,6 +2,7 @@ package com.tcs.parcelX.service;
 import com.tcs.parcelX.dto.*;
 import com.tcs.parcelX.dto.*;
 import com.tcs.parcelX.entity.Parcel;
+import com.tcs.parcelX.entity.Payment;
 import com.tcs.parcelX.entity.User;
 import com.tcs.parcelX.exception.BadRequestException;
 import com.tcs.parcelX.exception.ParcelNotFoundException;
@@ -9,6 +10,7 @@ import com.tcs.parcelX.exception.UnauthorizedException;
 import com.tcs.parcelX.exception.UserNotFoundException;
 import com.tcs.parcelX.mapper.ParcelMapper;
 import com.tcs.parcelX.repository.ParcelRepository;
+import com.tcs.parcelX.repository.PaymentRepository;
 import com.tcs.parcelX.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class ParcelService {
     private UserRepository userRepository;
     @Autowired
     private ParcelMapper parcelMapper;
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     private static final double BASE_RATE = 50.0;
     private static final double COST_PER_GRAM = 0.02;
@@ -42,6 +46,9 @@ public class ParcelService {
         Parcel parcel = parcelMapper.toEntity(request, user, trackingId, cost, deliveryType, packagingType);
 
         Parcel saved = parcelRepository.save(parcel);
+        if (User.Role.ADMIN.equals(user.getRole())) {
+            markAdminBookingAsPaid(saved);
+        }
         return parcelMapper.toResponse(saved);
     }
 
@@ -142,6 +149,18 @@ public class ParcelService {
 
     private String generateTrackingId() {
         return "TRK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    private void markAdminBookingAsPaid(Parcel parcel) {
+        paymentRepository.save(Payment.builder()
+                .parcel(parcel)
+                .amount(parcel.getCost())
+                .method(Payment.PaymentMethod.UPI)
+                .status(Payment.PaymentStatus.CONFIRMED)
+                .transactionId("ADMIN-" + System.currentTimeMillis())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build());
     }
 
     private double calculateServiceCost(Double weightInGrams, String deliveryType, String packagingType) {
