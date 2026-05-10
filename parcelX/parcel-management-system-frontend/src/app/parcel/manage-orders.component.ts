@@ -139,7 +139,7 @@ import { environment } from '../../environments/environment';
     </div>
     <div class="form-group">
      <label>Comment</label>
-     <textarea [(ngModel)]="feedbackForm.comment" placeholder="Share your delivery experience" rows="3"></textarea>
+     <textarea [(ngModel)]="feedbackForm.comment" placeholder="Enter your delivery feedback" rows="3"></textarea>
     </div>
     <button class="modal-btn" (click)="submitFeedback()">Submit Feedback</button>
     <p *ngIf="feedbackMessage" class="message" [ngClass]="feedbackMessageType">{{ feedbackMessage }}</p>

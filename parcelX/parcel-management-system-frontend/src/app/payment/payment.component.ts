@@ -40,7 +40,7 @@ import { environment } from '../../environments/environment';
    <ng-container *ngIf="method === 'UPI'">
     <div class="form-group">
      <label>UPI ID</label>
-     <input type="text" [(ngModel)]="upiId" placeholder="name@bank" (ngModelChange)="validateField('upiId')" />
+     <input type="text" [(ngModel)]="upiId" placeholder="Enter your UPI ID" (ngModelChange)="validateField('upiId')" />
      <small class="field-error" *ngIf="errors.upiId">{{ errors.upiId }}</small>
     </div>
    </ng-container>
@@ -48,24 +48,24 @@ import { environment } from '../../environments/environment';
    <ng-container *ngIf="method !== 'UPI'">
     <div class="form-group">
      <label>Cardholder Name</label>
-     <input type="text" [(ngModel)]="cardholderName" placeholder="Name printed on card" maxlength="50" (ngModelChange)="validateField('cardholderName')" />
+     <input type="text" [(ngModel)]="cardholderName" placeholder="Enter cardholder name" maxlength="50" (ngModelChange)="validateField('cardholderName')" />
      <small class="field-error" *ngIf="errors.cardholderName">{{ errors.cardholderName }}</small>
     </div>
     <div class="form-group">
      <label>Card Number</label>
-     <input type="text" [(ngModel)]="cardNumber" placeholder="16 digit card number" maxlength="16" inputmode="numeric" (input)="limitCardNumber(); validateField('cardNumber')" />
+     <input type="text" [(ngModel)]="cardNumber" placeholder="Enter card number" maxlength="16" inputmode="numeric" (input)="limitCardNumber(); validateField('cardNumber')" />
      <small class="field-error" *ngIf="errors.cardNumber">{{ errors.cardNumber }}</small>
     </div>
     <div class="form-row">
      <div class="form-group">
       <label>Expiry</label>
-      <input type="text" [(ngModel)]="expiryDate" maxlength="5" placeholder="MM/YY" (input)="formatExpiryDate(); validateField('expiryDate')" />
+      <input type="text" [(ngModel)]="expiryDate" maxlength="5" placeholder="Enter expiry date" (input)="formatExpiryDate(); validateField('expiryDate')" />
       <small class="field-error" *ngIf="errors.expiryDate">{{ errors.expiryDate }}</small>
      </div>
      <div class="form-group">
       <label>CVV</label>
       <div class="cvv-wrapper">
-       <input [type]="showCvv ? 'text' : 'password'" [(ngModel)]="cvv" maxlength="3" placeholder="123" inputmode="numeric" (input)="limitCvv(); validateField('cvv')" />
+       <input [type]="showCvv ? 'text' : 'password'" [(ngModel)]="cvv" maxlength="3" placeholder="Enter CVV" inputmode="numeric" (input)="limitCvv(); validateField('cvv')" />
        <button type="button" class="eye-btn" [attr.aria-label]="showCvv ? 'Hide CVV' : 'Show CVV'" [attr.title]="showCvv ? 'Hide CVV' : 'Show CVV'" (click)="showCvv = !showCvv"><span class="eye-shape" [class.eye-off]="showCvv"></span></button>
       </div>
       <small class="field-error" *ngIf="errors.cvv">{{ errors.cvv }}</small>

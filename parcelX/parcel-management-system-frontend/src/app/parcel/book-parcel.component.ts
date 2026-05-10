@@ -32,14 +32,14 @@ import { environment } from '../../environments/environment';
      <div class="form-group">
       <label>Sender Name <span class="req">*</span></label>
       <input type="text" [(ngModel)]="form.senderName" name="senderName"
-        placeholder="Full name" maxlength="40"
+        placeholder="Enter sender name" maxlength="40"
         (ngModelChange)="validateField('senderName')" required />
       <small class="field-error" *ngIf="errors.senderName">{{ errors.senderName }}</small>
      </div>
      <div class="form-group">
       <label>Pickup Address <span class="req">*</span></label>
       <input type="text" [(ngModel)]="form.pickupAddress" name="pickupAddress"
-        placeholder="House number, street, area" maxlength="100"
+        placeholder="Enter pickup address" maxlength="100"
         (ngModelChange)="validateField('pickupAddress')" required />
       <small class="field-error" *ngIf="errors.pickupAddress">{{ errors.pickupAddress }}</small>
      </div>
@@ -47,14 +47,14 @@ import { environment } from '../../environments/environment';
       <div class="form-group">
        <label>PIN Code <span class="req">*</span></label>
        <input type="text" [(ngModel)]="form.pickupZipCode" name="pickupZipCode"
-         placeholder="560001" maxlength="6" inputmode="numeric"
+         placeholder="Enter pickup PIN code" maxlength="6" inputmode="numeric"
          (input)="limitDigits('pickupZipCode', 6); validateField('pickupZipCode')" required />
        <small class="field-error" *ngIf="errors.pickupZipCode">{{ errors.pickupZipCode }}</small>
       </div>
       <div class="form-group">
        <label>Contact Number <span class="req">*</span></label>
        <input type="tel" [(ngModel)]="form.pickupContactInfo" name="pickupContactInfo"
-         placeholder="9876543210" maxlength="10" inputmode="numeric"
+         placeholder="Enter pickup contact number" maxlength="10" inputmode="numeric"
          (input)="limitDigits('pickupContactInfo', 10); validateField('pickupContactInfo')" required />
        <small class="field-error" *ngIf="errors.pickupContactInfo">{{ errors.pickupContactInfo }}</small>
       </div>
@@ -68,7 +68,7 @@ import { environment } from '../../environments/environment';
       <div class="form-group">
        <label>Weight (grams) <span class="req">*</span></label>
        <input type="text" [(ngModel)]="form.weight" name="weight"
-         placeholder="Min 50g – Max 30000g" maxlength="5" inputmode="numeric"
+         placeholder="Enter parcel weight" maxlength="5" inputmode="numeric"
          (input)="limitWeightDigits()" required />
        <small class="field-error" *ngIf="errors.weight">{{ errors.weight }}</small>
       </div>
@@ -105,14 +105,14 @@ import { environment } from '../../environments/environment';
      <div class="form-group">
       <label>Receiver Name <span class="req">*</span></label>
       <input type="text" [(ngModel)]="form.receiverName" name="receiverName"
-        placeholder="Full name" maxlength="40"
+        placeholder="Enter receiver name" maxlength="40"
         (ngModelChange)="validateField('receiverName')" required />
       <small class="field-error" *ngIf="errors.receiverName">{{ errors.receiverName }}</small>
      </div>
      <div class="form-group">
       <label>Drop Location <span class="req">*</span></label>
       <input type="text" [(ngModel)]="form.dropLocation" name="dropLocation"
-        placeholder="House number, street, area" maxlength="100"
+        placeholder="Enter drop address" maxlength="100"
         (ngModelChange)="validateField('dropLocation')" required />
       <small class="field-error" *ngIf="errors.dropLocation">{{ errors.dropLocation }}</small>
      </div>
@@ -120,14 +120,14 @@ import { environment } from '../../environments/environment';
       <div class="form-group">
        <label>PIN Code <span class="req">*</span></label>
        <input type="text" [(ngModel)]="form.dropZipCode" name="dropZipCode"
-         placeholder="110001" maxlength="6" inputmode="numeric"
+         placeholder="Enter drop PIN code" maxlength="6" inputmode="numeric"
          (input)="limitDigits('dropZipCode', 6); validateField('dropZipCode')" required />
        <small class="field-error" *ngIf="errors.dropZipCode">{{ errors.dropZipCode }}</small>
       </div>
       <div class="form-group">
        <label>Contact Number <span class="req">*</span></label>
        <input type="tel" [(ngModel)]="form.dropContactInfo" name="dropContactInfo"
-         placeholder="9876543210" maxlength="10" inputmode="numeric"
+         placeholder="Enter drop contact number" maxlength="10" inputmode="numeric"
          (input)="limitDigits('dropContactInfo', 10); validateField('dropContactInfo')" required />
        <small class="field-error" *ngIf="errors.dropContactInfo">{{ errors.dropContactInfo }}</small>
       </div>

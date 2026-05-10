@@ -42,13 +42,13 @@ import { environment } from '../../environments/environment';
           <div class="form-group">
             <label>Full Name</label>
             <input type="text" [value]="profile.name || ''" disabled class="disabled"
-              placeholder="As registered" />
+              placeholder="Enter your username" />
           </div>
 
           <div class="form-group">
             <label>Email</label>
             <input type="email" [(ngModel)]="profile.email" name="email"
-              placeholder="Email address"
+              placeholder="Enter your email address"
               (ngModelChange)="validateProfileField('email')" />
             <small class="error" *ngIf="errors.email">{{ errors.email }}</small>
           </div>
@@ -62,7 +62,7 @@ import { environment } from '../../environments/environment';
           <div class="form-group">
             <label>Phone Number</label>
             <input type="tel" [(ngModel)]="profile.phone" name="phone"
-              placeholder="10-digit mobile number" maxlength="10" inputmode="numeric"
+              placeholder="Enter your mobile number" maxlength="10" inputmode="numeric"
               (input)="limitDigits('phone', 10); validateProfileField('phone')" />
             <small class="error" *ngIf="errors.phone">{{ errors.phone }}</small>
           </div>
@@ -70,7 +70,7 @@ import { environment } from '../../environments/environment';
           <div class="form-group">
             <label>Address</label>
             <textarea [(ngModel)]="profile.address" name="address"
-              placeholder="House number, street, area" maxlength="120" rows="3"
+              placeholder="Enter your address" maxlength="120" rows="3"
               (ngModelChange)="validateProfileField('address')"></textarea>
             <small class="error" *ngIf="errors.address">{{ errors.address }}</small>
           </div>
@@ -80,7 +80,7 @@ import { environment } from '../../environments/environment';
             <div class="form-group">
               <label>City</label>
               <input type="text" [(ngModel)]="profile.city" name="city"
-                placeholder="City" maxlength="50"
+                placeholder="Enter your city" maxlength="50"
                 (ngModelChange)="validateProfileField('city')" />
               <small class="error" *ngIf="errors.city">{{ errors.city }}</small>
             </div>
@@ -88,7 +88,7 @@ import { environment } from '../../environments/environment';
             <div class="form-group">
               <label>State</label>
               <input type="text" [(ngModel)]="profile.state" name="state"
-                placeholder="State" maxlength="50"
+                placeholder="Enter your state" maxlength="50"
                 (ngModelChange)="validateProfileField('state')" />
               <small class="error" *ngIf="errors.state">{{ errors.state }}</small>
             </div>
@@ -96,7 +96,7 @@ import { environment } from '../../environments/environment';
             <div class="form-group">
               <label>PIN Code</label>
               <input type="text" [(ngModel)]="profile.zipCode" name="zipCode"
-                placeholder="6-digit PIN code" maxlength="6" inputmode="numeric"
+                placeholder="Enter your PIN code" maxlength="6" inputmode="numeric"
                 (input)="limitDigits('zipCode', 6); validateProfileField('zipCode')" />
               <small class="error" *ngIf="errors.zipCode">{{ errors.zipCode }}</small>
             </div>
