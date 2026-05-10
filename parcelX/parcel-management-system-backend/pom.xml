@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>parcelX</artifactId>
+    <artifactId>parcel-management-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Parecel Management Syatem</name>
-    <description>Parecel Management Syatem</description>
+    <name>Parcel Management System</name>
+    <description>Parcel Management System</description>
     <properties>
         <java.version>17</java.version>
     </properties>
