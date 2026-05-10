@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 <div class="page-wrapper">
 
   <div class="navbar">
-    <div class="nav-brand">Parecel Management Syatem</div>
+    <div class="nav-brand">Parcel Management System</div>
     <div class="nav-actions">
       <button class="home-btn" (click)="goHome()">Home</button>
       <button class="back-btn" (click)="goBack()">Back</button>

@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
  template: `
   <main class="landing-page">
    <nav class="landing-nav">
-    <div class="brand-mark">Parecel Management Syatem</div>
+    <div class="brand-mark">Parcel Management System</div>
     <div class="nav-actions">
      <button type="button" class="ghost-btn" (click)="goToLogin()">Sign In</button>
      <button type="button" class="solid-btn" (click)="goToRegister()">Create Account</button>
@@ -16,8 +16,8 @@ import { Router } from '@angular/router';
 
    <section class="hero">
     <div class="hero-copy">
-     <p class="eyebrow">Parecel Management Syatem</p>
-     <h1>Welcome to <span class="brand-accent">Parecel Management Syatem</span></h1>
+     <p class="eyebrow">Parcel Management System</p>
+     <h1>Welcome to <span class="brand-accent">Parcel Management System</span></h1>
      <p class="hero-text">
       Book parcels, pay securely, track every shipment, and manage delivery history from one clean dashboard.
      </p>
@@ -27,7 +27,7 @@ import { Router } from '@angular/router';
      </div>
     </div>
 
-    <div class="hero-panel" aria-label="Parecel Management Syatem shipment overview">
+    <div class="hero-panel" aria-label="Parcel Management System shipment overview">
      <div class="panel-header">
       <span>Live Shipment</span>
       <strong>TRK-X2048</strong>
@@ -66,10 +66,10 @@ import { Router } from '@angular/router';
 
    <footer class="landing-footer">
     <div>
-     <strong>Parecel Management Syatem</strong>
+     <strong>Parcel Management System</strong>
      <p>Parcel booking, payments, tracking, and order management for customers and admins.</p>
     </div>
-    <p class="footer-copy">&copy; 2026 Parecel Management Syatem. All rights reserved.</p>
+    <p class="footer-copy">&copy; 2026 Parcel Management System. All rights reserved.</p>
    </footer>
   </main>
  `,

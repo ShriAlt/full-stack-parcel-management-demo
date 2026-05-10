@@ -14,7 +14,7 @@ import { environment } from '../../environments/environment';
 <div class="login-container">
 
   <div class="navbar">
-    <div class="navbar-brand" (click)="goHome()" style="cursor:pointer">Parecel Management Syatem</div>
+    <div class="navbar-brand" (click)="goHome()" style="cursor:pointer">Parcel Management System</div>
   </div>
 
   <div class="login-content">
@@ -78,7 +78,7 @@ import { environment } from '../../environments/environment';
   </div>
 
   <div class="footer">
-    <p>&copy; 2026 Parecel Management Syatem. All rights reserved.</p>
+    <p>&copy; 2026 Parcel Management System. All rights reserved.</p>
   </div>
 
 </div>

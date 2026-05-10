@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment';
  template: `
 <div class="payment-page">
  <div class="topbar">
-  <div class="brand">Parecel Management Syatem Payments</div>
+  <div class="brand">Parcel Management System Payments</div>
   <div class="topbar-actions">
    <button class="back-btn" (click)="goDashboard()">Dashboard</button>
    <button class="back-btn" (click)="goOrders()">My Orders</button>

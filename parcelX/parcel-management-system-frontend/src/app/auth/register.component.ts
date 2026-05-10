@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 <div class="register-container">
 
   <div class="navbar">
-    <div class="navbar-brand" (click)="goHome()" style="cursor:pointer">Parecel Management Syatem</div>
+    <div class="navbar-brand" (click)="goHome()" style="cursor:pointer">Parcel Management System</div>
   </div>
 
   <div class="register-content">
@@ -153,7 +153,7 @@ import { environment } from '../../environments/environment';
   </div>
 
   <div class="footer">
-    <p>&copy; 2026 Parecel Management Syatem. All rights reserved.</p>
+    <p>&copy; 2026 Parcel Management System. All rights reserved.</p>
   </div>
 
   <div *ngIf="acknowledgementMessage" class="modal" (click)="closeAcknowledgement()">

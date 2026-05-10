@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment';
 <div class="page-wrapper">
 
  <div class="navbar">
-  <div class="nav-brand">Parecel Management Syatem</div>
+  <div class="nav-brand">Parcel Management System</div>
   <div class="nav-actions">
    <button class="home-btn" (click)="goHome()">Home</button>
    <button class="back-btn" (click)="goBack()">Back</button>
@@ -348,7 +348,7 @@ export class ManageOrdersComponent implements OnInit {
 
  downloadInvoice(parcel: any) {
   const lines = [
-   `INVOICE — Parecel Management Syatem`,
+   `INVOICE — Parcel Management System`,
    `Tracking ID: ${parcel.trackingId}`,
    `Sender: ${parcel.senderName || parcel.senderUsername}`,
    `Pickup: ${parcel.pickupAddress} — ${parcel.pickupZipCode}`,
@@ -367,7 +367,7 @@ export class ManageOrdersComponent implements OnInit {
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
-  a.download = `Parecel Management Syatem-invoice-${parcel.trackingId}.txt`;
+  a.download = `Parcel Management System-invoice-${parcel.trackingId}.txt`;
   a.click();
   URL.revokeObjectURL(url);
  }
