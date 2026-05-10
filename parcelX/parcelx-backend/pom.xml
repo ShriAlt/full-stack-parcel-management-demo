@@ -11,8 +11,8 @@
     <groupId>com.example</groupId>
     <artifactId>parcelX</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>parcelX</name>
-    <description>Parcel Management System</description>
+    <name>Parecel Management Syatem</name>
+    <description>Parecel Management Syatem</description>
     <properties>
         <java.version>17</java.version>
     </properties>

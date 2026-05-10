@@ -18,13 +18,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'DELIVERY_AGENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<UserProfileResponse>> getProfile(Authentication authentication) {
         return ResponseEntity.ok(ApiResponse.success("User profile fetched successfully", userService.getProfile(authentication.getName())));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'DELIVERY_AGENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @PutMapping("/profile")
     public ResponseEntity<ApiResponse<UserProfileResponse>> updateProfile(@Valid @RequestBody UserProfileUpdateRequest request, Authentication authentication) {
         return ResponseEntity.ok(ApiResponse.success("User profile updated successfully", userService.updateProfile(authentication.getName(), request)));
@@ -36,4 +36,3 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("All users fetched successfully", userService.getAllUsers()));
     }
 }
-

@@ -42,6 +42,6 @@ public class RegisterRequest {
     @Size(min = 10, max = 120, message = "Address must be between 10 and 120 characters")
     private String address;
 
-    @Pattern(regexp = "^(ADMIN|CUSTOMER|DELIVERY_AGENT)$", message = "Role must be ADMIN, CUSTOMER, or DELIVERY_AGENT")
-    private String role; // ADMIN, CUSTOMER, or DELIVERY_AGENT
+    @Pattern(regexp = "^(ADMIN|CUSTOMER)$", message = "Role must be ADMIN or CUSTOMER")
+    private String role;
 }

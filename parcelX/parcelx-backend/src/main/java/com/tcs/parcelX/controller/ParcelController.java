@@ -18,7 +18,7 @@ public class ParcelController {
     @Autowired
     private ParcelService parcelService;
 
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @PostMapping
     public ResponseEntity<ApiResponse<ParcelResponse>> bookParcel(@Valid @RequestBody BookParcelRequest request, Authentication authentication) {
         return ResponseEntity.ok(ApiResponse.success("Parcel created successfully", parcelService.bookParcel(request, authentication.getName())));
@@ -30,13 +30,13 @@ public class ParcelController {
         return ResponseEntity.ok(ApiResponse.success("Parcels fetched successfully", parcelService.listParcelsForUser(authentication.getName())));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'DELIVERY_AGENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ParcelResponse>> trackParcel(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success("Parcel fetched successfully", parcelService.trackParcel(id)));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'DELIVERY_AGENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @GetMapping("/track/{trackingId}")
     public ResponseEntity<ApiResponse<TrackingResponse>> trackByTrackingId(@PathVariable String trackingId) {
         return ResponseEntity.ok(ApiResponse.success("Parcel tracking fetched successfully", parcelService.trackByTrackingId(trackingId)));
@@ -54,13 +54,13 @@ public class ParcelController {
         return ResponseEntity.ok(ApiResponse.success("Parcel cancelled successfully", parcelService.cancelParcel(id, request, authentication.getName())));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'DELIVERY_AGENT')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/all")
     public ResponseEntity<ApiResponse<List<ParcelResponse>>> getAllParcels() {
         return ResponseEntity.ok(ApiResponse.success("All parcels fetched successfully", parcelService.getAllParcels()));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'DELIVERY_AGENT')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/{id}/status")
     public ResponseEntity<ApiResponse<ParcelResponse>> updateParcelStatus(@PathVariable Long id, @Valid @RequestBody Map<String, String> request) {
         return ResponseEntity.ok(ApiResponse.success("Parcel status updated successfully", parcelService.updateParcelStatus(id, request.get("status"))));
@@ -72,5 +72,3 @@ public class ParcelController {
         return ResponseEntity.ok(ApiResponse.success("Invoice generated successfully", parcelService.generateInvoice(id, authentication.getName())));
     }
 }
-
-

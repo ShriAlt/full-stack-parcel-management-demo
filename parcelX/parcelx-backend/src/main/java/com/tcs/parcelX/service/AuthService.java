@@ -54,7 +54,7 @@ public class AuthService {
             try {
                 role = User.Role.valueOf(request.getRole());
             } catch (IllegalArgumentException ex) {
-                throw new BadRequestException("Role must be ADMIN, CUSTOMER, or DELIVERY_AGENT");
+                throw new BadRequestException("Role must be ADMIN or CUSTOMER");
             }
         }
 
@@ -73,5 +73,4 @@ public class AuthService {
         return user;
     }
 }
-
 

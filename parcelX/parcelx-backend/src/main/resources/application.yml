@@ -17,7 +17,7 @@ spring:
         format_sql: true
 parcel:
   app:
-    name: parcelX
+    name: Parecel Management Syatem
   security:
     jwt:
       secret: ${JWT_SECRET:Mybigasssecretkey333333333}
