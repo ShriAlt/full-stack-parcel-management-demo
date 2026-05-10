@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment';
 <div class="page-wrapper">
 
  <div class="navbar">
-  <div class="nav-brand">parcelX</div>
+  <div class="nav-brand">Parecel Management Syatem</div>
   <div class="nav-actions">
    <button class="home-btn" (click)="goHome()">Home</button>
    <button class="back-btn" (click)="goBack()">Back</button>
@@ -32,7 +32,7 @@ import { environment } from '../../environments/environment';
      <div class="form-group">
       <label>Sender Name <span class="req">*</span></label>
       <input type="text" [(ngModel)]="form.senderName" name="senderName"
-        placeholder="e.g. Ananya Sharma" maxlength="40"
+        placeholder="Full name" maxlength="40"
         (ngModelChange)="validateField('senderName')" required />
       <small class="field-error" *ngIf="errors.senderName">{{ errors.senderName }}</small>
      </div>
@@ -105,7 +105,7 @@ import { environment } from '../../environments/environment';
      <div class="form-group">
       <label>Receiver Name <span class="req">*</span></label>
       <input type="text" [(ngModel)]="form.receiverName" name="receiverName"
-        placeholder="e.g. Rohan Mehta" maxlength="40"
+        placeholder="Full name" maxlength="40"
         (ngModelChange)="validateField('receiverName')" required />
       <small class="field-error" *ngIf="errors.receiverName">{{ errors.receiverName }}</small>
      </div>

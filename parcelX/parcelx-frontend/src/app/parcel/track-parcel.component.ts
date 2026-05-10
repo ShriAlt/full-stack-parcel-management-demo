@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { environment } from '../../environments/environment';
  template: `<div class="page-wrapper"><div class="navbar"><div class="nav-brand">Track Parcel</div><button class="back-btn" (click)="goBack()">Back</button></div><div class="main-content"><div class="search-card"><h1>Track Your Parcel</h1><p>Enter your tracking ID to check the status</p><div class="search-box"><input 
  type="text" 
  [(ngModel)]="trackingId" 
- placeholder="e.g., TRK-ABC12345" 
+ placeholder="Enter tracking ID"
  class="search-input"
  (keyup.enter)="trackParcel()"
  /><button class="search-btn" (click)="trackParcel()">Search</button></div><p *ngIf="message" [ngClass]="messageType" class="message">{{ message }}</p></div><div *ngIf="result" class="result-card"><h2>Tracking Results</h2><div class="result-details"><div class="detail-row"><span class="label">Tracking ID:</span><span class="value">{{ result.trackingId }}</span></div><div class="detail-row"><span class="label">Status:</span><span class="value" [ngClass]="'status-' + result.status.toLowerCase()">{{ result.status }}</span></div><div class="detail-row"><span class="label">Message:</span><span class="value">{{ result.message }}</span></div></div><div class="timeline"><div class="timeline-item" [ngClass]="{'active': isStatusReached('CREATED')}"><div class="timeline-marker">1</div><p>Created</p></div><div class="timeline-item" [ngClass]="{'active': isStatusReached('PENDING')}"><div class="timeline-marker">2</div><p>Pending</p></div><div class="timeline-item" [ngClass]="{'active': isStatusReached('IN_TRANSIT')}"><div class="timeline-marker">3</div><p>In Transit</p></div><div class="timeline-item" [ngClass]="{'active': isStatusReached('OUT_FOR_DELIVERY')}"><div class="timeline-marker">4</div><p>Out for Delivery</p></div><div class="timeline-item" [ngClass]="{'active': isStatusReached('DELIVERED')}"><div class="timeline-marker">5</div><p>Delivered</p></div></div></div></div></div>`,

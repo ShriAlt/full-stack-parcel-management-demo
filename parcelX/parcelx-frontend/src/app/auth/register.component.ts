@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 <div class="register-container">
 
   <div class="navbar">
-    <div class="navbar-brand" (click)="goHome()" style="cursor:pointer">parcelX</div>
+    <div class="navbar-brand" (click)="goHome()" style="cursor:pointer">Parecel Management Syatem</div>
   </div>
 
   <div class="register-content">
@@ -31,7 +31,7 @@ import { environment } from '../../environments/environment';
         <div class="form-group">
           <label for="name">Full Name</label>
           <input id="name" type="text" [(ngModel)]="formData.name" name="name"
-            placeholder="e.g. Ananya Sharma" maxlength="50"
+            placeholder="Full name" maxlength="50"
             (ngModelChange)="validateField('name')" required />
           <small class="error" *ngIf="errors.name">{{ errors.name }}</small>
         </div>
@@ -40,7 +40,7 @@ import { environment } from '../../environments/environment';
         <div class="form-group">
           <label for="email">Email</label>
           <input id="email" type="email" [(ngModel)]="formData.email" name="email"
-            placeholder="name@example.com"
+            placeholder="Email address"
             (ngModelChange)="validateField('email')" required />
           <small class="error" *ngIf="errors.email">{{ errors.email }}</small>
         </div>
@@ -67,7 +67,7 @@ import { environment } from '../../environments/environment';
         <div class="form-group">
           <label for="city">City</label>
           <input id="city" type="text" [(ngModel)]="formData.city" name="city"
-            placeholder="e.g. Bengaluru" maxlength="50"
+            placeholder="City" maxlength="50"
             (ngModelChange)="validateField('city')" required />
           <small class="error" *ngIf="errors.city">{{ errors.city }}</small>
         </div>
@@ -76,7 +76,7 @@ import { environment } from '../../environments/environment';
         <div class="form-group">
           <label for="state">State</label>
           <input id="state" type="text" [(ngModel)]="formData.state" name="state"
-            placeholder="e.g. Karnataka" maxlength="50"
+            placeholder="State" maxlength="50"
             (ngModelChange)="validateField('state')" required />
           <small class="error" *ngIf="errors.state">{{ errors.state }}</small>
         </div>
@@ -85,7 +85,7 @@ import { environment } from '../../environments/environment';
         <div class="form-group">
           <label for="zipCode">PIN Code</label>
           <input id="zipCode" type="text" [(ngModel)]="formData.zipCode" name="zipCode"
-            placeholder="6-digit PIN code (e.g. 560001)" maxlength="6" inputmode="numeric"
+            placeholder="6-digit PIN code" maxlength="6" inputmode="numeric"
             (input)="limitDigits('zipCode', 6); validateField('zipCode')" required />
           <small class="error" *ngIf="errors.zipCode">{{ errors.zipCode }}</small>
         </div>
@@ -153,7 +153,15 @@ import { environment } from '../../environments/environment';
   </div>
 
   <div class="footer">
-    <p>&copy; 2026 parcelX. All rights reserved.</p>
+    <p>&copy; 2026 Parecel Management Syatem. All rights reserved.</p>
+  </div>
+
+  <div *ngIf="acknowledgementMessage" class="modal" (click)="closeAcknowledgement()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" type="button" (click)="closeAcknowledgement()">Close</button>
+      <h2>Registration successful</h2>
+      <p>{{ acknowledgementMessage }}</p>
+    </div>
   </div>
 
 </div>
@@ -267,6 +275,9 @@ input:focus, textarea:focus {
 
 .footer { background: rgba(0,0,0,0.5); color: white; text-align: center; padding: 20px; }
 .footer p { margin: 0; }
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-content{background:white;color:#1f2937;padding:30px;border-radius:10px;max-width:380px;width:90%;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3);text-align:center}
+.close-btn{position:absolute;top:15px;right:15px;background:#f1f5f9;border:1px solid #d1d5db;font-size:12px;cursor:pointer}
 
 `]
 })
@@ -291,6 +302,7 @@ export class RegisterComponent {
  showConfirmPassword = false;
  successMessage = '';
  errorMessage = '';
+ acknowledgementMessage = '';
 
  constructor(
   private http: HttpClient,
@@ -396,7 +408,8 @@ export class RegisterComponent {
 
    next: () => {
     this.successMessage = 'Account created successfully! Redirecting to login...';
-    setTimeout(() => this.router.navigate(['/login']), 2000);
+    this.acknowledgementMessage = 'Your account has been created successfully. Redirecting to login...';
+    setTimeout(() => this.router.navigate(['/login']), 1800);
    },
 
    error: (error: any) => {
@@ -423,6 +436,10 @@ export class RegisterComponent {
 
  goToLogin() { this.router.navigate(['/login']); }
  goHome()    { this.router.navigate(['/']); }
+ closeAcknowledgement() {
+  this.acknowledgementMessage = '';
+  this.router.navigate(['/login']);
+ }
 
  limitDigits(field: keyof typeof this.formData, length: number): void {
   this.formData[field] = String(this.formData[field] || '').replace(/\D/g, '').slice(0, length);

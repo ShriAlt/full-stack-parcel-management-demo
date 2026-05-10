@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 <div class="page-wrapper">
 
   <div class="navbar">
-    <div class="nav-brand">parcelX</div>
+    <div class="nav-brand">Parecel Management Syatem</div>
     <div class="nav-actions">
       <button class="home-btn" (click)="goHome()">Home</button>
       <button class="back-btn" (click)="goBack()">Back</button>
@@ -48,7 +48,7 @@ import { environment } from '../../environments/environment';
           <div class="form-group">
             <label>Email</label>
             <input type="email" [(ngModel)]="profile.email" name="email"
-              placeholder="name@example.com"
+              placeholder="Email address"
               (ngModelChange)="validateProfileField('email')" />
             <small class="error" *ngIf="errors.email">{{ errors.email }}</small>
           </div>
@@ -80,7 +80,7 @@ import { environment } from '../../environments/environment';
             <div class="form-group">
               <label>City</label>
               <input type="text" [(ngModel)]="profile.city" name="city"
-                placeholder="e.g. Bengaluru" maxlength="50"
+                placeholder="City" maxlength="50"
                 (ngModelChange)="validateProfileField('city')" />
               <small class="error" *ngIf="errors.city">{{ errors.city }}</small>
             </div>
@@ -88,7 +88,7 @@ import { environment } from '../../environments/environment';
             <div class="form-group">
               <label>State</label>
               <input type="text" [(ngModel)]="profile.state" name="state"
-                placeholder="e.g. Karnataka" maxlength="50"
+                placeholder="State" maxlength="50"
                 (ngModelChange)="validateProfileField('state')" />
               <small class="error" *ngIf="errors.state">{{ errors.state }}</small>
             </div>
@@ -96,7 +96,7 @@ import { environment } from '../../environments/environment';
             <div class="form-group">
               <label>PIN Code</label>
               <input type="text" [(ngModel)]="profile.zipCode" name="zipCode"
-                placeholder="e.g. 560001" maxlength="6" inputmode="numeric"
+                placeholder="6-digit PIN code" maxlength="6" inputmode="numeric"
                 (input)="limitDigits('zipCode', 6); validateProfileField('zipCode')" />
               <small class="error" *ngIf="errors.zipCode">{{ errors.zipCode }}</small>
             </div>

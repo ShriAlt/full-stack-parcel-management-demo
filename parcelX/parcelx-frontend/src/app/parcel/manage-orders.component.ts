@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment';
 <div class="page-wrapper">
 
  <div class="navbar">
-  <div class="nav-brand">parcelX</div>
+  <div class="nav-brand">Parecel Management Syatem</div>
   <div class="nav-actions">
    <button class="home-btn" (click)="goHome()">Home</button>
    <button class="back-btn" (click)="goBack()">Back</button>
@@ -25,7 +25,6 @@ import { environment } from '../../environments/environment';
   <div class="controls">
    <input type="text" placeholder="Search by tracking ID, receiver or status"
      [(ngModel)]="searchTerm" (ngModelChange)="page = 1" class="search-input" />
-   <button class="refresh-btn" (click)="loadParcels()">Refresh</button>
   </div>
 
   <ng-container *ngIf="parcels.length > 0; else noParcels">
@@ -349,7 +348,7 @@ export class ManageOrdersComponent implements OnInit {
 
  downloadInvoice(parcel: any) {
   const lines = [
-   `INVOICE — parcelX`,
+   `INVOICE — Parecel Management Syatem`,
    `Tracking ID: ${parcel.trackingId}`,
    `Sender: ${parcel.senderName || parcel.senderUsername}`,
    `Pickup: ${parcel.pickupAddress} — ${parcel.pickupZipCode}`,
@@ -368,7 +367,7 @@ export class ManageOrdersComponent implements OnInit {
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
-  a.download = `parcelX-invoice-${parcel.trackingId}.txt`;
+  a.download = `Parecel Management Syatem-invoice-${parcel.trackingId}.txt`;
   a.click();
   URL.revokeObjectURL(url);
  }
