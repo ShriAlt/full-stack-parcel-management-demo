@@ -155,11 +155,11 @@ import { environment } from '../../environments/environment';
    <div class="form-group">
     <label>Reason for cancellation</label>
     <textarea [(ngModel)]="cancelReason" placeholder="Enter cancellation reason" rows="3" maxlength="200"
-      (input)="validateCancelReason()"></textarea>
+      (ngModelChange)="validateCancelReason()"></textarea>
     <small class="hint">Use 5-200 characters and at least two words.</small>
     <small class="field-error" *ngIf="cancelReasonError">{{ cancelReasonError }}</small>
    </div>
-   <button class="modal-btn cancel-confirm-btn" (click)="confirmCancel()" [disabled]="!!cancelReasonError">Confirm Cancellation</button>
+   <button class="modal-btn cancel-confirm-btn" (click)="confirmCancel()" [disabled]="!isCancelReasonValid()">Confirm Cancellation</button>
   </div>
  </div>
 
@@ -340,6 +340,7 @@ export class ManageOrdersComponent implements OnInit {
  }
  closeCancel() {
   this.cancelParcelTarget = null;
+  this.cancelReason = '';
   this.cancelReasonError = '';
  }
 
@@ -348,31 +349,51 @@ export class ManageOrdersComponent implements OnInit {
    return;
   }
   this.http.post(`${environment.apiUrl}/parcels/${this.cancelParcelTarget.id}/cancel`,
-   { parcelId: this.cancelParcelTarget.id, reason: this.cancelReason.trim().replace(/\s+/g, ' ') }
+   { parcelId: this.cancelParcelTarget.id, reason: this.getNormalizedCancelReason() }
   ).subscribe({
    next: () => {
     this.closeCancel();
     this.showPopup('Cancelled', 'Parcel cancellation submitted.');
     this.loadParcels();
    },
-   error: (err: any) => this.showPopup('Error', err.error?.message || 'Failed to cancel parcel.')
+   error: (err: any) => {
+    this.cancelReasonError = this.extractCancelReasonError(err);
+   }
   });
  }
 
  validateCancelReason(): boolean {
-  const reason = this.cancelReason.trim().replace(/\s+/g, ' ');
-  const wordCount = reason ? reason.split(' ').length : 0;
-  this.cancelReasonError = '';
-  if (!reason) {
-   this.cancelReasonError = 'Cancellation reason is required';
-  } else if (reason.length < 5) {
-   this.cancelReasonError = 'Cancellation reason must be at least 5 characters';
-  } else if (wordCount < 2) {
-   this.cancelReasonError = 'Cancellation reason must contain at least two words';
-  } else if (reason.length > 200) {
-   this.cancelReasonError = 'Cancellation reason cannot exceed 200 characters';
-  }
+  this.cancelReasonError = this.getCancelReasonError();
   return !this.cancelReasonError;
+ }
+
+ isCancelReasonValid(): boolean {
+  return !this.getCancelReasonError();
+ }
+
+ private getCancelReasonError(): string {
+  const reason = this.getNormalizedCancelReason();
+  const wordCount = reason ? reason.split(' ').length : 0;
+  if (!reason) {
+   return 'Cancellation reason is required';
+  } else if (reason.length < 5) {
+   return 'Cancellation reason must be at least 5 characters';
+  } else if (wordCount < 2) {
+   return 'Cancellation reason must contain at least two words';
+  } else if (reason.length > 200) {
+   return 'Cancellation reason cannot exceed 200 characters';
+  }
+  return '';
+ }
+
+ private getNormalizedCancelReason(): string {
+  return this.cancelReason.trim().replace(/\s+/g, ' ');
+ }
+
+ private extractCancelReasonError(err: any): string {
+  return err?.error?.data?.fields?.reason
+   || err?.error?.message
+   || 'Failed to cancel parcel.';
  }
 
  downloadInvoice(parcel: any) {
