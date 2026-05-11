@@ -107,7 +107,7 @@ public class ParcelService {
         }
 
         parcel.setStatus(Parcel.ParcelStatus.CANCELLED);
-        parcel.setCancelReason(request.getReason());
+        parcel.setCancelReason(request.getReason().trim().replaceAll("\\s+", " "));
         parcel.setUpdatedAt(LocalDateTime.now());
 
         Parcel updated = parcelRepository.save(parcel);

@@ -156,6 +156,7 @@ import { environment } from '../../environments/environment';
     <label>Reason for cancellation</label>
     <textarea [(ngModel)]="cancelReason" placeholder="Enter cancellation reason" rows="3" maxlength="200"
       (input)="validateCancelReason()"></textarea>
+    <small class="hint">Use 5-200 characters and at least two words.</small>
     <small class="field-error" *ngIf="cancelReasonError">{{ cancelReasonError }}</small>
    </div>
    <button class="modal-btn cancel-confirm-btn" (click)="confirmCancel()" [disabled]="!!cancelReasonError">Confirm Cancellation</button>
@@ -224,6 +225,7 @@ import { environment } from '../../environments/environment';
 .form-group { margin-bottom: 16px; }
 .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
 .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+.hint { display: block; color: #6b7280; font-size: 12px; margin-top: 4px; }
 .field-error { display: block; color: #991b1b; font-size: 12px; font-weight: bold; margin-top: 4px; }
 .modal-btn { width: 100%; padding: 12px; background: #1f2937; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 8px; }
 .modal-btn:disabled { opacity: .6; cursor: not-allowed; }
@@ -359,11 +361,14 @@ export class ManageOrdersComponent implements OnInit {
 
  validateCancelReason(): boolean {
   const reason = this.cancelReason.trim().replace(/\s+/g, ' ');
+  const wordCount = reason ? reason.split(' ').length : 0;
   this.cancelReasonError = '';
   if (!reason) {
    this.cancelReasonError = 'Cancellation reason is required';
   } else if (reason.length < 5) {
    this.cancelReasonError = 'Cancellation reason must be at least 5 characters';
+  } else if (wordCount < 2) {
+   this.cancelReasonError = 'Cancellation reason must contain at least two words';
   } else if (reason.length > 200) {
    this.cancelReasonError = 'Cancellation reason cannot exceed 200 characters';
   }
