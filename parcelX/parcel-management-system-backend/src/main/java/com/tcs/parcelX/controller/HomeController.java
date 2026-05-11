@@ -32,7 +32,7 @@ public class HomeController {
                 <p>Demo login accounts:</p>
                 <ul>
                   <li><code>admin / admin123</code></li>
-                  <li><code>user / user123</code></li>
+                  <li><code>user33 / user123</code></li>
                 </ul>
               </div>
             </body>

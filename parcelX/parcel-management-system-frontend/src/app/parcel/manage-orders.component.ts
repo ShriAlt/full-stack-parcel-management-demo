@@ -154,9 +154,11 @@ import { environment } from '../../environments/environment';
    <h2>Cancel Parcel</h2>
    <div class="form-group">
     <label>Reason for cancellation</label>
-    <textarea [(ngModel)]="cancelReason" placeholder="Enter cancellation reason" rows="3"></textarea>
+    <textarea [(ngModel)]="cancelReason" placeholder="Enter cancellation reason" rows="3" maxlength="200"
+      (input)="validateCancelReason()"></textarea>
+    <small class="field-error" *ngIf="cancelReasonError">{{ cancelReasonError }}</small>
    </div>
-   <button class="modal-btn cancel-confirm-btn" (click)="confirmCancel()">Confirm Cancellation</button>
+   <button class="modal-btn cancel-confirm-btn" (click)="confirmCancel()" [disabled]="!!cancelReasonError">Confirm Cancellation</button>
   </div>
  </div>
 
@@ -222,7 +224,9 @@ import { environment } from '../../environments/environment';
 .form-group { margin-bottom: 16px; }
 .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
 .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+.field-error { display: block; color: #991b1b; font-size: 12px; font-weight: bold; margin-top: 4px; }
 .modal-btn { width: 100%; padding: 12px; background: #1f2937; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+.modal-btn:disabled { opacity: .6; cursor: not-allowed; }
 .cancel-confirm-btn { background: #991b1b; }
 .message { margin-top: 12px; padding: 10px; border-radius: 5px; text-align: center; }
 .success { background: #ecfdf5; color: #166534; }
@@ -247,6 +251,7 @@ export class ManageOrdersComponent implements OnInit {
  feedbackMessageType   = '';
  cancelParcelTarget: any = null;
  cancelReason          = '';
+ cancelReasonError     = '';
  popupTitle            = '';
  popupMessage          = '';
 
@@ -326,16 +331,22 @@ export class ManageOrdersComponent implements OnInit {
   });
  }
 
- openCancel(parcel: any) { this.cancelParcelTarget = parcel; this.cancelReason = ''; }
- closeCancel()           { this.cancelParcelTarget = null; }
+ openCancel(parcel: any) {
+  this.cancelParcelTarget = parcel;
+  this.cancelReason = '';
+  this.cancelReasonError = '';
+ }
+ closeCancel() {
+  this.cancelParcelTarget = null;
+  this.cancelReasonError = '';
+ }
 
  confirmCancel() {
-  if (!this.cancelReason.trim()) {
-   this.showPopup('Required', 'Please enter a cancellation reason.');
+  if (!this.validateCancelReason()) {
    return;
   }
   this.http.post(`${environment.apiUrl}/parcels/${this.cancelParcelTarget.id}/cancel`,
-   { parcelId: this.cancelParcelTarget.id, reason: this.cancelReason }
+   { parcelId: this.cancelParcelTarget.id, reason: this.cancelReason.trim().replace(/\s+/g, ' ') }
   ).subscribe({
    next: () => {
     this.closeCancel();
@@ -344,6 +355,19 @@ export class ManageOrdersComponent implements OnInit {
    },
    error: (err: any) => this.showPopup('Error', err.error?.message || 'Failed to cancel parcel.')
   });
+ }
+
+ validateCancelReason(): boolean {
+  const reason = this.cancelReason.trim().replace(/\s+/g, ' ');
+  this.cancelReasonError = '';
+  if (!reason) {
+   this.cancelReasonError = 'Cancellation reason is required';
+  } else if (reason.length < 5) {
+   this.cancelReasonError = 'Cancellation reason must be at least 5 characters';
+  } else if (reason.length > 200) {
+   this.cancelReasonError = 'Cancellation reason cannot exceed 200 characters';
+  }
+  return !this.cancelReasonError;
  }
 
  downloadInvoice(parcel: any) {

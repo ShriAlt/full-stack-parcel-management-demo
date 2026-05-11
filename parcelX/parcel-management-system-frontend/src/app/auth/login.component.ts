@@ -62,6 +62,10 @@ import { environment } from '../../environments/environment';
 
       </form>
 
+      <p class="forgot-link">
+        <a href="javascript:void(0)" (click)="goToForgotPassword()">Forgot password?</a>
+      </p>
+
       <p class="register-link">
         Don't have an account?
         <a href="javascript:void(0)" (click)="goToRegister()">Sign Up</a>
@@ -215,12 +219,21 @@ input:focus {
   font-size: 14px;
 }
 
+.forgot-link {
+  text-align: right;
+  margin-top: 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.forgot-link a,
 .register-link a {
   color: #334155;
   text-decoration: none;
   font-weight: bold;
 }
 
+.forgot-link a:hover,
 .register-link a:hover { text-decoration: underline; }
 
 `]
@@ -282,5 +295,6 @@ export class LoginComponent {
  }
 
  goToRegister() { this.router.navigate(['/register']); }
+ goToForgotPassword() { this.router.navigate(['/forgot-password']); }
  goHome()        { this.router.navigate(['/']); }
 }

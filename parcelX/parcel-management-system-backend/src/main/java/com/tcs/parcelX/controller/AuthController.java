@@ -1,7 +1,10 @@
 package com.tcs.parcelX.controller;
 import com.tcs.parcelX.dto.ApiResponse;
 import com.tcs.parcelX.dto.AuthRequest;
+import com.tcs.parcelX.dto.ForgotPasswordRequest;
 import com.tcs.parcelX.dto.RegisterRequest;
+import com.tcs.parcelX.dto.ResetPasswordRequest;
+import com.tcs.parcelX.dto.VerifyResetOtpRequest;
 import com.tcs.parcelX.entity.User;
 import com.tcs.parcelX.security.JwtUtil;
 import com.tcs.parcelX.service.AuthService;
@@ -34,5 +37,23 @@ public class AuthController {
         response.put("tokenType", "Bearer");
         response.put("expiresIn", jwtUtil.getExpirationMs());
         return ResponseEntity.ok(ApiResponse.success("Login successful", response));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        authService.sendPasswordResetOtp(request);
+        return ResponseEntity.ok(ApiResponse.<Void>success("OTP sent to registered email", null));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok(ApiResponse.<Void>success("Password reset successfully", null));
+    }
+
+    @PostMapping("/verify-reset-otp")
+    public ResponseEntity<ApiResponse<Void>> verifyResetOtp(@Valid @RequestBody VerifyResetOtpRequest request) {
+        authService.verifyResetOtp(request);
+        return ResponseEntity.ok(ApiResponse.<Void>success("OTP verified successfully", null));
     }
 }

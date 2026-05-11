@@ -133,6 +133,16 @@ import { environment } from '../../environments/environment';
           <small class="error" *ngIf="errors.confirmPassword">{{ errors.confirmPassword }}</small>
         </div>
 
+        <div class="policy-group">
+          <label class="policy-label" for="acceptPrivacyPolicy">
+            <input id="acceptPrivacyPolicy" type="checkbox"
+              [(ngModel)]="acceptedPrivacyPolicy" name="acceptedPrivacyPolicy"
+              (ngModelChange)="validateField('acceptedPrivacyPolicy')" />
+            <span>I accept the privacy policy and agree to the terms of service.</span>
+          </label>
+          <small class="error" *ngIf="errors.acceptedPrivacyPolicy">{{ errors.acceptedPrivacyPolicy }}</small>
+        </div>
+
         <button type="submit" class="register-btn">Create Account</button>
 
       </form>
@@ -233,6 +243,10 @@ input:focus, textarea:focus {
 
 .input-group { display: flex; align-items: stretch; }
 .form-control { border-right: none !important; border-radius: 5px 0 0 5px !important; }
+.policy-group { margin-bottom: 20px; }
+.policy-label { display: flex; align-items: flex-start; gap: 10px; font-weight: normal; line-height: 1.45; color: #334155; }
+.policy-label input { width: 16px; height: 16px; margin-top: 3px; flex: 0 0 auto; }
+.policy-label span { flex: 1; }
 
 .eye-icon {
   cursor: pointer;
@@ -298,6 +312,7 @@ export class RegisterComponent {
  };
 
  errors: any = {};
+ acceptedPrivacyPolicy = false;
  showPassword = false;
  showConfirmPassword = false;
  successMessage = '';
@@ -379,6 +394,10 @@ export class RegisterComponent {
 
   if (this.formData.password !== this.formData.confirmPassword) {
    this.errors.confirmPassword = 'Passwords do not match';
+  }
+
+  if (!this.acceptedPrivacyPolicy) {
+   this.errors.acceptedPrivacyPolicy = 'Please accept the privacy policy to create an account';
   }
 
   return Object.keys(this.errors).length === 0;

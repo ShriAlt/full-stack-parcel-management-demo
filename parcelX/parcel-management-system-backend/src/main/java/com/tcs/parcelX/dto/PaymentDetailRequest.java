@@ -25,10 +25,9 @@ public class PaymentDetailRequest {
     @Pattern(regexp = "^(0[1-9]|1[0-2])/\\d{2}$", message = "Expiry date must use MM/YY format")
     private String expiryDate;
 
-    @Pattern(regexp = "^[0-9]{3}$", message = "CVV must contain 3 digits")
+    @Pattern(regexp = "^[1-9][0-9]{2}$", message = "CVV must contain 3 digits and cannot start with 0")
     private String cvv;
 
     @Pattern(regexp = "^[a-zA-Z0-9._-]+@[a-zA-Z]{3,}$", message = "UPI ID format is invalid")
     private String upiId;
 }
-

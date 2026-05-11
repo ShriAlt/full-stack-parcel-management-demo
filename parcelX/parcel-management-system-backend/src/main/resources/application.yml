@@ -15,9 +15,20 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:parcelx.demo.mail@example.com}
+    password: ${MAIL_PASSWORD:replace-with-demo-mail-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 parcel:
   app:
-    name: Parecel Management Syatem
+    name: Parcel Management System
   security:
     jwt:
       secret: ${JWT_SECRET:Mybigasssecretkey333333333}

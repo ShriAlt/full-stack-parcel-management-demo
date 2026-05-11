@@ -31,6 +31,10 @@ public class User {
     private String state;
     @Column
     private String zipCode;
+    @Column
+    private String resetOtpHash;
+    @Column
+    private LocalDateTime resetOtpExpiresAt;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

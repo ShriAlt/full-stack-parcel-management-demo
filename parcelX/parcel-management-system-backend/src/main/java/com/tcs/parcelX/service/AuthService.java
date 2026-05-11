@@ -1,6 +1,9 @@
 package com.tcs.parcelX.service;
 import com.tcs.parcelX.dto.AuthRequest;
+import com.tcs.parcelX.dto.ForgotPasswordRequest;
 import com.tcs.parcelX.dto.RegisterRequest;
+import com.tcs.parcelX.dto.ResetPasswordRequest;
+import com.tcs.parcelX.dto.VerifyResetOtpRequest;
 import com.tcs.parcelX.entity.User;
 import com.tcs.parcelX.exception.BadRequestException;
 import com.tcs.parcelX.mapper.UserMapper;
@@ -9,15 +12,24 @@ import com.tcs.parcelX.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 
 @Service
 public class AuthService {
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final int OTP_EXPIRY_MINUTES = 10;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private MailService mailService;
 
     public void registerUser(RegisterRequest request) {
         if (!ValidationUtil.isValidUsername(request.getUsername())) {
@@ -42,7 +54,7 @@ public class AuthService {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new BadRequestException("Username is already taken");
         }
-        if (request.getEmail() != null && userRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (request.getEmail() != null && userRepository.findByEmailIgnoreCase(request.getEmail().trim()).isPresent()) {
             throw new BadRequestException("Email is already registered");
         }
         if (request.getPhone() != null && userRepository.findByPhone(request.getPhone()).isPresent()) {
@@ -72,5 +84,75 @@ public class AuthService {
 
         return user;
     }
-}
 
+    @Transactional
+    public void sendPasswordResetOtp(ForgotPasswordRequest request) {
+        String email = normalizeEmail(request.getEmail());
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new BadRequestException("No account is registered with this email"));
+
+        String otp = String.format("%06d", SECURE_RANDOM.nextInt(1_000_000));
+        user.setResetOtpHash(passwordEncoder.encode(otp));
+        user.setResetOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
+        userRepository.save(user);
+
+        try {
+            mailService.sendPasswordResetOtp(email, otp);
+        } catch (BadRequestException ex) {
+            user.setResetOtpHash(null);
+            user.setResetOtpExpiresAt(null);
+            userRepository.save(user);
+            throw ex;
+        }
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        String email = normalizeEmail(request.getEmail());
+        User user = validateResetOtp(email, normalizeOtp(request.getOtp()));
+
+        if (!ValidationUtil.isValidPassword(request.getNewPassword())) {
+            throw new BadRequestException("Password must be at least 8 characters with uppercase, lowercase, and special character");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        clearResetOtp(user);
+        userRepository.save(user);
+    }
+
+    public void verifyResetOtp(VerifyResetOtpRequest request) {
+        validateResetOtp(normalizeEmail(request.getEmail()), normalizeOtp(request.getOtp()));
+    }
+
+    private User validateResetOtp(String email, String otp) {
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new BadRequestException("Invalid email or OTP"));
+
+        if (user.getResetOtpHash() == null || user.getResetOtpExpiresAt() == null) {
+            throw new BadRequestException("Please request a new OTP before resetting password");
+        }
+        if (LocalDateTime.now().isAfter(user.getResetOtpExpiresAt())) {
+            clearResetOtp(user);
+            userRepository.save(user);
+            throw new BadRequestException("OTP has expired. Please request a new OTP");
+        }
+        if (!passwordEncoder.matches(otp, user.getResetOtpHash())) {
+            throw new BadRequestException("Invalid email or OTP");
+        }
+
+        return user;
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase();
+    }
+
+    private String normalizeOtp(String otp) {
+        return otp == null ? "" : otp.trim();
+    }
+
+    private void clearResetOtp(User user) {
+        user.setResetOtpHash(null);
+        user.setResetOtpExpiresAt(null);
+    }
+}

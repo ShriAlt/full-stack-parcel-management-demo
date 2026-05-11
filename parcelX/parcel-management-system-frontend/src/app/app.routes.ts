@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login.component';
 import { RegisterComponent } from './auth/register.component';
+import { ForgotPasswordComponent } from './auth/forgot-password.component';
 import { UserDashboardComponent } from './dashboard/user-dashboard.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard.component';
 import { BookParcelComponent } from './parcel/book-parcel.component';
@@ -15,6 +16,7 @@ import { authGuard } from './core/auth.guard';
 export const routes: Routes = [
  { path: '', component: LandingComponent },
  { path: 'login', component: LoginComponent },
+ { path: 'forgot-password', component: ForgotPasswordComponent },
  { path: 'register', component: RegisterComponent },
  { path: 'user-dashboard', component: UserDashboardComponent, canActivate: [authGuard], data: { roles: [UserRole.USER] } },
  { path: 'user/book-parcel', component: BookParcelComponent, canActivate: [authGuard], data: { roles: [UserRole.USER] } },

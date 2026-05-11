@@ -11,7 +11,7 @@ public class ValidationUtil {
     private static final String ZIP_CODE_PATTERN = "^[1-9][0-9]{5}$";
     private static final String UPI_PATTERN = "^[a-zA-Z0-9._-]+@[a-zA-Z]{3,}$";
     private static final String CARD_NUMBER_PATTERN = "^[0-9]{16}$";
-    private static final String CVV_PATTERN = "^[0-9]{3}$";
+    private static final String CVV_PATTERN = "^[1-9][0-9]{2}$";
     private static final String EXPIRY_PATTERN = "^(0[1-9]|1[0-2])/\\d{2}$";
 
     public static boolean isValidUsername(String username) {

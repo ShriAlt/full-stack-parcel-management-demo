@@ -66,7 +66,9 @@ import { environment } from '../../environments/environment';
       <label>CVV</label>
       <div class="cvv-wrapper">
        <input [type]="showCvv ? 'text' : 'password'" [(ngModel)]="cvv" maxlength="3" placeholder="Enter CVV" inputmode="numeric" (input)="limitCvv(); validateField('cvv')" />
-       <button type="button" class="eye-btn" [attr.aria-label]="showCvv ? 'Hide CVV' : 'Show CVV'" [attr.title]="showCvv ? 'Hide CVV' : 'Show CVV'" (click)="showCvv = !showCvv"><span class="eye-shape" [class.eye-off]="showCvv"></span></button>
+       <button type="button" class="eye-btn" [attr.aria-label]="showCvv ? 'Hide CVV' : 'Show CVV'" [attr.title]="showCvv ? 'Hide CVV' : 'Show CVV'" (click)="showCvv = !showCvv">
+        <i class="bi" [ngClass]="showCvv ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+       </button>
       </div>
       <small class="field-error" *ngIf="errors.cvv">{{ errors.cvv }}</small>
      </div>
@@ -86,7 +88,7 @@ import { environment } from '../../environments/environment';
  </div>
 </div>`,
  styles: [`
-.payment-page{min-height:100vh;background:#1f2937}.topbar{background:rgba(0,0,0,.3);color:white;padding:15px 30px;display:flex;justify-content:space-between;align-items:center}.brand{font-size:24px;font-weight:bold}.topbar-actions{display:flex;gap:10px}.back-btn{padding:10px 20px;border:none;border-radius:5px;background:rgba(255,255,255,.3);color:white;cursor:pointer}.payment-wrapper{max-width:700px;margin:40px auto}.payment-card{background:white;padding:40px;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.3)}.payment-card h2{margin-top:0;color:#111827}.summary-box{background:#f8fafc;padding:20px;border:1px solid #e2e8f0;border-radius:8px;margin:20px 0}.summary-item{display:flex;justify-content:space-between;margin-bottom:10px;color:#1f2937}.form-group{margin-bottom:20px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}label{display:block;margin-bottom:6px;font-weight:bold;color:#333}input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;color:#111827;background:white}input::placeholder{color:#64748b;opacity:1}.cvv-wrapper{position:relative}.eye-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:34px;height:30px;border:1px solid #d1d5db;background:#f8fafc;color:#334155;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center}.eye-shape{width:18px;height:11px;border:2px solid currentColor;border-radius:50%/65%;position:relative;display:block}.eye-shape:before{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;background:currentColor;border-radius:50%;transform:translate(-50%,-50%)}.eye-shape.eye-off:after{content:"";position:absolute;left:7px;top:-5px;width:2px;height:20px;background:currentColor;transform:rotate(45deg);border-radius:2px}.pay-btn{width:100%;padding:14px;border:none;border-radius:6px;background:#1f2937;color:white;font-weight:bold;cursor:pointer}.pay-btn:disabled{opacity:.6;cursor:not-allowed}.field-error{display:block;color:#dc2626;margin-top:5px;font-size:12px;font-weight:bold}.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;color:#1f2937;padding:30px;border-radius:10px;max-width:500px;width:90%;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3)}.close-btn{position:absolute;top:15px;right:15px;background:#f1f5f9;border:1px solid #d1d5db;font-size:12px;cursor:pointer}.small-popup{max-width:360px}@media(max-width:768px){.payment-wrapper{margin:20px}.payment-card{padding:24px}.form-row{grid-template-columns:1fr}.topbar{display:block}.topbar-actions{margin-top:12px}}
+.payment-page{min-height:100vh;background:#1f2937}.topbar{background:rgba(0,0,0,.3);color:white;padding:15px 30px;display:flex;justify-content:space-between;align-items:center}.brand{font-size:24px;font-weight:bold}.topbar-actions{display:flex;gap:10px}.back-btn{padding:10px 20px;border:none;border-radius:5px;background:rgba(255,255,255,.3);color:white;cursor:pointer}.payment-wrapper{max-width:700px;margin:40px auto}.payment-card{background:white;padding:40px;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.3)}.payment-card h2{margin-top:0;color:#111827}.summary-box{background:#f8fafc;padding:20px;border:1px solid #e2e8f0;border-radius:8px;margin:20px 0}.summary-item{display:flex;justify-content:space-between;margin-bottom:10px;color:#1f2937}.form-group{margin-bottom:20px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}label{display:block;margin-bottom:6px;font-weight:bold;color:#333}input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;color:#111827;background:white}input::placeholder{color:#64748b;opacity:1}.cvv-wrapper{position:relative}.eye-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:34px;height:30px;border:1px solid #d1d5db;background:#f8fafc;color:#334155;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}.eye-btn:hover{background:#eef2f7;color:#111827}.pay-btn{width:100%;padding:14px;border:none;border-radius:6px;background:#1f2937;color:white;font-weight:bold;cursor:pointer}.pay-btn:disabled{opacity:.6;cursor:not-allowed}.field-error{display:block;color:#dc2626;margin-top:5px;font-size:12px;font-weight:bold}.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:white;color:#1f2937;padding:30px;border-radius:10px;max-width:500px;width:90%;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3)}.close-btn{position:absolute;top:15px;right:15px;background:#f1f5f9;border:1px solid #d1d5db;font-size:12px;cursor:pointer}.small-popup{max-width:360px}@media(max-width:768px){.payment-wrapper{margin:20px}.payment-card{padding:24px}.form-row{grid-template-columns:1fr}.topbar{display:block}.topbar-actions{margin-top:12px}}
  `]
 })
 export class PaymentComponent implements OnInit {
@@ -152,14 +154,14 @@ export class PaymentComponent implements OnInit {
 
  validateField(field: string) {
   delete this.errors[field];
-  if (field === 'upiId' && !/^[a-zA-Z0-9._-]{2,}@[a-zA-Z]{2,}$/.test(this.upiId || '')) this.errors.upiId = 'Enter valid UPI ID';
+  if (field === 'upiId' && !/^[a-zA-Z0-9._-]+@[a-zA-Z]{3,}$/.test(this.upiId || '')) this.errors.upiId = 'Enter valid UPI ID, for example name@bank';
   if (field === 'cardholderName' && !/^[A-Za-z ]{3,50}$/.test(this.cardholderName || '')) this.errors.cardholderName = 'Enter valid cardholder name';
   if (field === 'cardNumber' && !/^\d{16}$/.test(this.cardNumber || '')) this.errors.cardNumber = 'Card number must be 16 digits';
   if (field === 'expiryDate') {
    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(this.expiryDate || '')) this.errors.expiryDate = 'Enter valid expiry as MM/YY';
    else if (!this.isFutureExpiry(this.expiryDate)) this.errors.expiryDate = 'Card expiry must be in the future';
   }
-  if (field === 'cvv' && !/^\d{3}$/.test(this.cvv || '')) this.errors.cvv = 'CVV must be 3 digits';
+  if (field === 'cvv' && !/^[1-9][0-9]{2}$/.test(this.cvv || '')) this.errors.cvv = 'CVV must be 3 digits and cannot start with 0';
  }
 
  validateForm(): boolean {

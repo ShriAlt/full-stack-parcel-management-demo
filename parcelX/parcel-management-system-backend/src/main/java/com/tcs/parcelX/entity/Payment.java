@@ -16,6 +16,9 @@ public class Payment {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parcel_id", nullable = false)
     private Parcel parcel;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "demo_card_id")
+    private DemoCard demoCard;
     @Column(nullable = false)
     private Double amount;
     @Enumerated(EnumType.STRING)
