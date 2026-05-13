@@ -19,7 +19,7 @@ public class PaymentDetailRequest {
     @Pattern(regexp = "^[0-9]{16}$", message = "Card number must contain 16 digits")
     private String cardNumber;
 
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{1,49}$", message = "Cardholder name must contain only letters and spaces")
+    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "Cardholder name must contain only letters and spaces, between 3 and 50 characters")
     private String cardholderName;
 
     @Pattern(regexp = "^(0[1-9]|1[0-2])/\\d{2}$", message = "Expiry date must use MM/YY format")

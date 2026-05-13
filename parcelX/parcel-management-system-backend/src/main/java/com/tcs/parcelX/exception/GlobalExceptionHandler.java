@@ -10,13 +10,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Set<String> SENSITIVE_FIELDS = Set.of(
+            "password", "newPassword", "confirmPassword", "cardNumber", "cvv", "upiId");
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, Object>>> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, String> fields = new LinkedHashMap<>();
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            fields.put(fieldError.getField(), fieldError.getDefaultMessage());
+            if (SENSITIVE_FIELDS.contains(fieldError.getField())) {
+                fields.put("paymentDetails", "Sensitive payment or credential details are invalid");
+            } else {
+                fields.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
         }
 
         Map<String, Object> err = buildError(HttpStatus.BAD_REQUEST, "Validation failed", request);

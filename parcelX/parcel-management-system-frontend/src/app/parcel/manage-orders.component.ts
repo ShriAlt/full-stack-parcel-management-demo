@@ -314,10 +314,17 @@ export class ManageOrdersComponent implements OnInit {
  closeFeedback() { this.showFeedbackForm = false; }
 
  submitFeedback() {
+  const comment = this.feedbackForm.comment.trim().replace(/\s+/g, ' ');
+  if (comment.length < 5 || comment.length > 500) {
+   this.feedbackMessage = 'Comment must be between 5 and 500 characters.';
+   this.feedbackMessageType = 'error';
+   return;
+  }
+
   const payload = {
    parcelId: this.feedbackTargetParcel.id,
    rating:     Number(this.feedbackForm.rating),
-   comment:    this.feedbackForm.comment
+   comment
   };
 
   this.http.post(`${environment.apiUrl}/feedback`, payload).subscribe({
@@ -397,27 +404,17 @@ export class ManageOrdersComponent implements OnInit {
  }
 
  downloadInvoice(parcel: any) {
-  const lines = [
-   `INVOICE — Parcel Management System`,
-   `Tracking ID: ${parcel.trackingId}`,
-   `Sender: ${parcel.senderName || parcel.senderUsername}`,
-   `Pickup: ${parcel.pickupAddress} — ${parcel.pickupZipCode}`,
-   `Receiver: ${parcel.receiverName}`,
-   `Drop: ${parcel.dropLocation} — ${parcel.dropZipCode}`,
-   `Weight: ${parcel.weight} g`,
-   `Delivery: ${this.getDeliveryLabel(parcel.deliveryType)}`,
-   `Packing: ${this.getPackagingLabel(parcel.packagingType)}`,
-   `Cost: INR ${parcel.cost}`,
-   `Status: ${parcel.status}`,
-   `Pickup Date: ${parcel.pickupDate}`,
-   `Booked: ${new Date(parcel.createdAt).toLocaleString()}`
-  ].join('\n');
+  this.http.get(`${environment.apiUrl}/parcels/${parcel.id}/invoice`, { responseType: 'blob' }).subscribe({
+   next: (blob: Blob) => this.saveBlob(blob, `parcel-invoice-${parcel.trackingId}.pdf`),
+   error: () => this.showPopup('Invoice failed', 'Could not download the invoice PDF. Please try again.')
+  });
+ }
 
-  const blob = new Blob([lines], { type: 'text/plain' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `Parcel Management System-invoice-${parcel.trackingId}.txt`;
+ private saveBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
  }

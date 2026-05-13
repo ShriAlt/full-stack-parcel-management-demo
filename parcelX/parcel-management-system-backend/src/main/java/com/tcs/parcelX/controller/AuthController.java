@@ -23,9 +23,14 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping(value="/register",produces="application/json")
-    public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegisterRequest request) {
-        authService.registerUser(request);
-        return ResponseEntity.ok(ApiResponse.<Void>success("User registered successfully", null));
+    public ResponseEntity<ApiResponse<Map<String, Object>>> register(@Valid @RequestBody RegisterRequest request) {
+        User user = authService.registerUser(request);
+        Map<String, Object> response = new HashMap<>();
+        response.put("username", user.getUsername());
+        response.put("name", user.getName());
+        response.put("email", user.getEmail());
+        response.put("role", user.getRole().name());
+        return ResponseEntity.ok(ApiResponse.success("User registered successfully", response));
     }
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<Map<String, Object>>> login(@Valid @RequestBody AuthRequest request) {

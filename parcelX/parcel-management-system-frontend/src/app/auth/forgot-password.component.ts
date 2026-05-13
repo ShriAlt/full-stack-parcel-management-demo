@@ -442,7 +442,7 @@ export class ForgotPasswordComponent {
  goHome() { this.router.navigate(['/']); }
 
  private isValidEmail(email: string) {
-  return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email.trim());
+  return /^(?!.*\.\.)(?![0-9]+@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(email.trim());
  }
 
  private isValidPassword(password: string) {

@@ -3,6 +3,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 import java.time.LocalDate;
 
@@ -16,11 +18,11 @@ public class BookParcelRequest {
     private String pickupAddress;
 
     @NotBlank(message = "Sender name is required")
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{1,49}$", message = "Sender name must contain only letters and spaces")
+    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "Sender name must contain only letters and spaces, between 3 and 50 characters")
     private String senderName;
 
     @NotBlank(message = "Receiver name is required")
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{1,49}$", message = "Receiver name must contain only letters and spaces")
+    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "Receiver name must contain only letters and spaces, between 3 and 50 characters")
     private String receiverName;
 
     @NotBlank(message = "Pickup contact info is required")
@@ -42,6 +44,8 @@ public class BookParcelRequest {
     private String dropContactInfo;
 
     @NotNull(message = "Weight is required")
+    @DecimalMin(value = "50.0", message = "Weight must be at least 50 grams")
+    @DecimalMax(value = "30000.0", message = "Weight cannot exceed 30000 grams")
     private Double weight;
 
     @NotBlank(message = "Delivery type is required")
@@ -55,4 +59,3 @@ public class BookParcelRequest {
     @NotNull(message = "Pickup date is required")
     private LocalDate pickupDate;
 }
-

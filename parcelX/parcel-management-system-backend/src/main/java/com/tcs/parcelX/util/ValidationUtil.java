@@ -6,7 +6,8 @@ public class ValidationUtil {
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9_]{3,20}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$";
     private static final String NAME_PATTERN = "^[A-Za-z][A-Za-z ]{1,49}$";
-    private static final String EMAIL_PATTERN = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    private static final String LOCATION_PATTERN = "^[A-Za-z][A-Za-z ]{2,49}$";
+    private static final String EMAIL_PATTERN = "^(?!.*\\.\\.)(?![0-9]+@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\\.)+[A-Za-z]{2,63}$";
     private static final String PHONE_PATTERN = "^[6-9][0-9]{9}$";
     private static final String ZIP_CODE_PATTERN = "^[1-9][0-9]{5}$";
     private static final String UPI_PATTERN = "^[a-zA-Z0-9._-]+@[a-zA-Z]{3,}$";
@@ -23,11 +24,15 @@ public class ValidationUtil {
     }
 
     public static boolean isValidName(String name) {
-        return name != null && Pattern.matches(NAME_PATTERN, name.trim().replaceAll("\\s+", " "));
+        return name != null && Pattern.matches(LOCATION_PATTERN, name.trim().replaceAll("\\s+", " "));
+    }
+
+    public static boolean isValidLocationName(String value) {
+        return value != null && Pattern.matches(LOCATION_PATTERN, value.trim().replaceAll("\\s+", " "));
     }
 
     public static boolean isValidEmail(String email) {
-        return email != null && Pattern.matches(EMAIL_PATTERN, email);
+        return email != null && Pattern.matches(EMAIL_PATTERN, email.trim());
     }
 
     public static boolean isValidPhone(String phone) {

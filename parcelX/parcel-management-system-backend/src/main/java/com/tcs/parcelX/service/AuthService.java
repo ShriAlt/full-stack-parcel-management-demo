@@ -31,7 +31,7 @@ public class AuthService {
     @Autowired
     private MailService mailService;
 
-    public void registerUser(RegisterRequest request) {
+    public User registerUser(RegisterRequest request) {
         if (!ValidationUtil.isValidUsername(request.getUsername())) {
             throw new BadRequestException("Username must be 3-20 characters (alphanumeric and underscore only)");
         }
@@ -41,20 +41,29 @@ public class AuthService {
         if (!ValidationUtil.isValidName(request.getName())) {
             throw new BadRequestException("Full name must contain only letters and spaces, between 2 and 50 characters");
         }
-        if (request.getEmail() != null && !ValidationUtil.isValidEmail(request.getEmail())) {
-            throw new BadRequestException("Invalid email format");
+        if (!ValidationUtil.isValidEmail(request.getEmail())) {
+            throw new BadRequestException("Email must be a valid address and cannot start with only digits");
         }
-        if (request.getPhone() != null && !ValidationUtil.isValidPhone(request.getPhone())) {
+        if (!ValidationUtil.isValidPhone(request.getPhone())) {
             throw new BadRequestException("Phone must be a valid 10 digit number starting with 6, 7, 8, or 9");
         }
         if (!ValidationUtil.isValidAddress(request.getAddress())) {
             throw new BadRequestException("Address must be between 10 and 120 characters");
         }
+        if (!ValidationUtil.isValidLocationName(request.getCity())) {
+            throw new BadRequestException("City must contain only letters and spaces, between 3 and 50 characters");
+        }
+        if (!ValidationUtil.isValidLocationName(request.getState())) {
+            throw new BadRequestException("State must contain only letters and spaces, between 3 and 50 characters");
+        }
+        if (!ValidationUtil.isValidZipCode(request.getZipCode())) {
+            throw new BadRequestException("Pin code must be a valid 6 digit Indian PIN code");
+        }
 
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new BadRequestException("Username is already taken");
         }
-        if (request.getEmail() != null && userRepository.findByEmailIgnoreCase(request.getEmail().trim()).isPresent()) {
+        if (userRepository.findByEmailIgnoreCase(request.getEmail().trim()).isPresent()) {
             throw new BadRequestException("Email is already registered");
         }
         if (request.getPhone() != null && userRepository.findByPhone(request.getPhone()).isPresent()) {
@@ -71,7 +80,7 @@ public class AuthService {
         }
 
         User user = userMapper.toEntity(request, passwordEncoder.encode(request.getPassword()), role);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public User validateLogin(AuthRequest request) {

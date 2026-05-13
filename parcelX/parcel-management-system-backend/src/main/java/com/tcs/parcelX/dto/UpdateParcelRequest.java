@@ -39,11 +39,11 @@ public class UpdateParcelRequest {
     private LocalDate pickupDate;
 
     @NotBlank(message = "Sender name is required")
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{1,49}$", message = "Sender name must contain only letters and spaces")
+    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "Sender name must contain only letters and spaces, between 3 and 50 characters")
     private String senderName;
 
     @NotBlank(message = "Receiver name is required")
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{1,49}$", message = "Receiver name must contain only letters and spaces")
+    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "Receiver name must contain only letters and spaces, between 3 and 50 characters")
     private String receiverName;
 
     @Pattern(regexp = "^[1-9][0-9]{5}$", message = "Pickup zip code must be a valid 6 digit code")
@@ -52,4 +52,3 @@ public class UpdateParcelRequest {
     @Pattern(regexp = "^[1-9][0-9]{5}$", message = "Drop zip code must be a valid 6 digit code")
     private String dropZipCode;
 }
-

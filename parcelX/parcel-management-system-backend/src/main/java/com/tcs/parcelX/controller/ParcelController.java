@@ -5,6 +5,8 @@ import com.tcs.parcelX.dto.*;
 import com.tcs.parcelX.service.ParcelService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -67,8 +69,12 @@ public class ParcelController {
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
-    @GetMapping("/{id}/invoice")
-    public ResponseEntity<ApiResponse<InvoiceResponse>> generateInvoice(@PathVariable Long id, Authentication authentication) {
-        return ResponseEntity.ok(ApiResponse.success("Invoice generated successfully", parcelService.generateInvoice(id, authentication.getName())));
+    @GetMapping(value = "/{id}/invoice", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> generateInvoice(@PathVariable Long id, Authentication authentication) {
+        byte[] pdf = parcelService.generateInvoicePdf(id, authentication.getName());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=parcel-invoice-" + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }

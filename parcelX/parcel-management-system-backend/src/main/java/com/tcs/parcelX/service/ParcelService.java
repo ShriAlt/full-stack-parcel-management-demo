@@ -14,6 +14,7 @@ import com.tcs.parcelX.repository.PaymentRepository;
 import com.tcs.parcelX.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +39,8 @@ public class ParcelService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        validateDifferentAddresses(request.getPickupAddress(), request.getDropLocation());
+        validatePickupDate(request.getPickupDate());
         double cost = calculateServiceCost(request.getWeight(), request.getDeliveryType(), request.getPackagingType());
         String trackingId = generateTrackingId();
         String deliveryType = normalizeDeliveryType(request.getDeliveryType());
@@ -87,6 +90,8 @@ public class ParcelService {
             throw new BadRequestException("Can only update parcels in CREATED status");
         }
 
+        validateDifferentAddresses(request.getPickupAddress(), request.getDropLocation());
+        validatePickupDate(request.getPickupDate());
         String deliveryType = normalizeDeliveryType(request.getDeliveryType());
         String packagingType = normalizePackagingType(request.getPackagingType());
         double cost = calculateServiceCost(parcel.getWeight(), deliveryType, packagingType);
@@ -145,6 +150,32 @@ public class ParcelService {
         }
 
         return parcelMapper.toInvoiceResponse(parcel);
+    }
+
+    public byte[] generateInvoicePdf(Long id, String username) {
+        return InvoicePdfGenerator.generate(generateInvoice(id, username));
+    }
+
+    private void validateDifferentAddresses(String pickupAddress, String dropLocation) {
+        String pickup = normalizeAddress(pickupAddress);
+        String drop = normalizeAddress(dropLocation);
+        if (!pickup.isBlank() && pickup.equals(drop)) {
+            throw new BadRequestException("Sender and receiver addresses cannot be the same");
+        }
+    }
+
+    private String normalizeAddress(String address) {
+        return address == null ? "" : address.trim().replaceAll("\\s+", " ").toLowerCase();
+    }
+
+    private void validatePickupDate(LocalDate pickupDate) {
+        if (pickupDate == null) {
+            throw new BadRequestException("Pickup date is required");
+        }
+        LocalDate today = LocalDate.now();
+        if (pickupDate.isBefore(today) || pickupDate.isAfter(today.plusDays(30))) {
+            throw new BadRequestException("Pickup date must be within the next 30 days");
+        }
     }
 
     private String generateTrackingId() {

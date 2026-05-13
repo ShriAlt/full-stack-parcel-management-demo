@@ -204,7 +204,7 @@ export class PaymentComponent implements OnInit {
      finish();
     }
    },
-   error: (error: any) => { this.submitting = false; this.showPopup('Payment failed', error.error?.message || error.error?.error || 'Payment failed'); }
+   error: (error: any) => { this.submitting = false; this.showPopup('Payment failed', this.safePaymentFailureMessage(error)); }
   });
  }
 
@@ -221,6 +221,14 @@ export class PaymentComponent implements OnInit {
 
  closePopup() {
   this.popupMessage = '';
+ }
+
+ safePaymentFailureMessage(error: any): string {
+  const message = String(error?.error?.message || error?.error?.error || '');
+  if (/card|cvv|upi|paymentDetails/i.test(message)) {
+   return 'Payment could not be processed. Please check the payment details and try again.';
+  }
+  return message || 'Payment could not be processed. Please try again.';
  }
 
  goDashboard() { this.router.navigate(['/user-dashboard']); }

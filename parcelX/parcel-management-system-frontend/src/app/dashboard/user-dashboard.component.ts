@@ -48,7 +48,7 @@ import { CountByStatusPipe } from '../core/count-by-status.pipe';
     <form (ngSubmit)="bookParcel()" class="booking-form admin-booking-form" autocomplete="off">
      <div class="form-main">
       <div class="form-section"><h3>Pickup Details</h3><div class="form-group"><label>Sender Name</label><input [(ngModel)]="bookForm.senderName" name="senderName" placeholder="Enter sender name" maxlength="40" (ngModelChange)="validateBookField('senderName')" /><small class="field-error" *ngIf="bookErrors.senderName">{{ bookErrors.senderName }}</small></div><div class="form-group"><label>Pickup Address</label><input [(ngModel)]="bookForm.pickupAddress" name="pickupAddress" placeholder="Enter pickup address" maxlength="50" (ngModelChange)="validateBookField('pickupAddress')" /><small class="field-error" *ngIf="bookErrors.pickupAddress">{{ bookErrors.pickupAddress }}</small></div><div class="form-row"><div class="form-group"><label>Pickup PIN Code</label><input [(ngModel)]="bookForm.pickupZipCode" name="pickupZipCode" placeholder="Enter pickup PIN code" maxlength="6" inputmode="numeric" (input)="limitBookDigits('pickupZipCode', 6); validateBookField('pickupZipCode')" /><small class="field-error" *ngIf="bookErrors.pickupZipCode">{{ bookErrors.pickupZipCode }}</small></div><div class="form-group"><label>Pickup Contact</label><input [(ngModel)]="bookForm.pickupContactInfo" name="pickupContactInfo" placeholder="Enter pickup contact number" maxlength="10" inputmode="numeric" (input)="limitBookDigits('pickupContactInfo', 10); validateBookField('pickupContactInfo')" /><small class="field-error" *ngIf="bookErrors.pickupContactInfo">{{ bookErrors.pickupContactInfo }}</small></div></div></div>
-      <div class="form-section"><h3>Package Details</h3><div class="form-row"><div class="form-group"><label>Weight (g)</label><input [(ngModel)]="bookForm.weight" name="weight" placeholder="Enter parcel weight" maxlength="4" inputmode="numeric" (input)="limitBookWeightDigits()" /><small class="field-error" *ngIf="bookErrors.weight">{{ bookErrors.weight }}</small></div><div class="form-group"><label>Pickup Date</label><input type="date" [(ngModel)]="bookForm.pickupDate" name="pickupDate" [min]="minPickupDate" [max]="maxPickupDate" (ngModelChange)="validateBookField('pickupDate')" /><small class="field-error" *ngIf="bookErrors.pickupDate">{{ bookErrors.pickupDate }}</small></div></div><div class="form-row"><div class="form-group"><label>Delivery Type</label><select [(ngModel)]="bookForm.deliveryType" name="deliveryType" (change)="calculateBookCost()"><option value="STANDARD">Standard Delivery - INR 30</option><option value="EXPRESS">Express Delivery - INR 80</option><option value="SAME_DAY">Same-Day Delivery - INR 150</option></select></div><div class="form-group"><label>Packaging Type</label><select [(ngModel)]="bookForm.packagingType" name="packagingType" (change)="calculateBookCost()"><option value="BASIC">Basic Packing - INR 10</option><option value="PREMIUM">Premium Packing - INR 30</option></select></div></div></div>
+      <div class="form-section"><h3>Package Details</h3><div class="form-row"><div class="form-group"><label>Weight (g)</label><input [(ngModel)]="bookForm.weight" name="weight" placeholder="Enter parcel weight" maxlength="5" inputmode="numeric" (input)="limitBookWeightDigits()" /><small class="field-error" *ngIf="bookErrors.weight">{{ bookErrors.weight }}</small></div><div class="form-group"><label>Pickup Date</label><input type="date" [(ngModel)]="bookForm.pickupDate" name="pickupDate" [min]="minPickupDate" [max]="maxPickupDate" (ngModelChange)="validateBookField('pickupDate')" /><small class="field-error" *ngIf="bookErrors.pickupDate">{{ bookErrors.pickupDate }}</small></div></div><div class="form-row"><div class="form-group"><label>Delivery Type</label><select [(ngModel)]="bookForm.deliveryType" name="deliveryType" (change)="calculateBookCost()"><option value="STANDARD">Standard Delivery - INR 30</option><option value="EXPRESS">Express Delivery - INR 80</option><option value="SAME_DAY">Same-Day Delivery - INR 150</option></select></div><div class="form-group"><label>Packaging Type</label><select [(ngModel)]="bookForm.packagingType" name="packagingType" (change)="calculateBookCost()"><option value="BASIC">Basic Packing - INR 10</option><option value="PREMIUM">Premium Packing - INR 30</option></select></div></div></div>
       <div class="form-section"><h3>Drop Details</h3><div class="form-group"><label>Receiver Name</label><input [(ngModel)]="bookForm.receiverName" name="receiverName" placeholder="Enter receiver name" maxlength="40" (ngModelChange)="validateBookField('receiverName')" /><small class="field-error" *ngIf="bookErrors.receiverName">{{ bookErrors.receiverName }}</small></div><div class="form-group"><label>Drop Location</label><input [(ngModel)]="bookForm.dropLocation" name="dropLocation" placeholder="Enter drop address" maxlength="50" (ngModelChange)="validateBookField('dropLocation')" /><small class="field-error" *ngIf="bookErrors.dropLocation">{{ bookErrors.dropLocation }}</small></div><div class="form-row"><div class="form-group"><label>Drop PIN Code</label><input [(ngModel)]="bookForm.dropZipCode" name="dropZipCode" placeholder="Enter drop PIN code" maxlength="6" inputmode="numeric" (input)="limitBookDigits('dropZipCode', 6); validateBookField('dropZipCode')" /><small class="field-error" *ngIf="bookErrors.dropZipCode">{{ bookErrors.dropZipCode }}</small></div><div class="form-group"><label>Drop Contact</label><input [(ngModel)]="bookForm.dropContactInfo" name="dropContactInfo" placeholder="Enter drop contact number" maxlength="10" inputmode="numeric" (input)="limitBookDigits('dropContactInfo', 10); validateBookField('dropContactInfo')" /><small class="field-error" *ngIf="bookErrors.dropContactInfo">{{ bookErrors.dropContactInfo }}</small></div></div></div>
       <button type="submit" class="submit-btn">Book Parcel</button>
      </div><aside class="cost-display"><p>Total Cost</p><strong>INR {{ bookEstimatedCost }}</strong><small>Base 50 + weight 0.02/g + delivery + packing + 5% tax</small></aside>
@@ -159,16 +159,17 @@ export class UserDashboardComponent implements OnInit {
  }
 
  limitBookDigits(field: string, length: number) { this.bookForm[field] = String(this.bookForm[field] || '').replace(/\D/g, '').slice(0, length); }
- limitBookWeightDigits() { this.limitBookDigits('weight', 4); this.calculateBookCost(); this.validateBookField('weight'); }
+ limitBookWeightDigits() { this.limitBookDigits('weight', 5); this.calculateBookCost(); this.validateBookField('weight'); }
 
  validateBookField(field: string) {
   const value = this.bookForm[field];
   delete this.bookErrors[field];
   if ((field === 'senderName' || field === 'receiverName') && !/^[A-Za-z ]{3,40}$/.test(value || '')) this.bookErrors[field] = 'Name must contain only letters and minimum 3 characters';
   if ((field === 'pickupAddress' || field === 'dropLocation') && (!value || value.trim().length < 10)) this.bookErrors[field] = 'Address must contain minimum 10 characters';
+  if ((field === 'pickupAddress' || field === 'dropLocation') && this.sameAddress(this.bookForm.pickupAddress, this.bookForm.dropLocation)) this.bookErrors.dropLocation = 'Sender and receiver addresses cannot be the same';
   if ((field === 'pickupZipCode' || field === 'dropZipCode') && !/^[1-9][0-9]{5}$/.test(value || '')) this.bookErrors[field] = 'Enter valid 6 digit Indian PIN code';
   if ((field === 'pickupContactInfo' || field === 'dropContactInfo') && !/^[6-9]\d{9}$/.test(value || '')) this.bookErrors[field] = 'Enter valid mobile number';
-  if (field === 'weight') { const weight = Number(value); if (!/^\d{1,4}$/.test(value || '')) this.bookErrors.weight = 'Weight must contain maximum 4 digits'; else if (weight < 50) this.bookErrors.weight = 'Minimum parcel weight is 50 grams'; }
+  if (field === 'weight') { const weight = Number(value); if (!/^\d{1,5}$/.test(value || '')) this.bookErrors.weight = 'Weight must contain maximum 5 digits'; else if (weight < 50) this.bookErrors.weight = 'Minimum parcel weight is 50 grams'; else if (weight > 30000) this.bookErrors.weight = 'Maximum parcel weight is 30,000 grams'; }
   if (field === 'pickupDate' && (!value || value < this.minPickupDate || value > this.maxPickupDate)) this.bookErrors.pickupDate = 'Pickup Date must be within the next 30 days';
  }
 
@@ -206,10 +207,10 @@ export class UserDashboardComponent implements OnInit {
  validateProfileField(field: string) {
   delete this.profileErrors[field];
   const value = String(this.profile?.[field] || '').trim();
-  if (field === 'email' && !/^(?![0-9]+@)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value)) this.profileErrors.email = 'Please enter a valid email address';
+  if (field === 'email' && !/^(?!.*\.\.)(?![0-9]+@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(value)) this.profileErrors.email = 'Enter a valid email such as name@example.com';
   if (field === 'phone' && !/^[6-9]\d{9}$/.test(value)) this.profileErrors.phone = 'Phone must be a valid 10 digit number';
   if (field === 'address' && value.length < 10) this.profileErrors.address = 'Address must contain at least 10 characters';
-  if ((field === 'city' || field === 'state') && !/^[A-Za-z ]{2,50}$/.test(value)) this.profileErrors[field] = 'Only letters and spaces are allowed';
+  if ((field === 'city' || field === 'state') && !/^[A-Za-z][A-Za-z ]{2,49}$/.test(value)) this.profileErrors[field] = 'Use 3-50 letters and spaces';
   if (field === 'zipCode' && !/^[1-9][0-9]{5}$/.test(value)) this.profileErrors.zipCode = 'Pin code must be a valid 6 digit Indian PIN code';
  }
  updateProfile() {
@@ -231,7 +232,12 @@ export class UserDashboardComponent implements OnInit {
  openFeedback(parcel: any) { if (parcel.status !== 'DELIVERED') return; this.feedbackTargetParcel = parcel; this.feedbackForm = { rating: '5', comment: '' }; this.showFeedbackForm = true; }
  closeFeedback() { this.showFeedbackForm = false; }
  submitFeedback() {
-  const payload = { parcelId: this.feedbackTargetParcel.id, rating: Number(this.feedbackForm.rating), comment: this.feedbackForm.comment };
+  const comment = this.feedbackForm.comment.trim().replace(/\s+/g, ' ');
+  if (comment.length < 5 || comment.length > 500) {
+   this.showPopup('Feedback failed', 'Feedback comment must be between 5 and 500 characters.');
+   return;
+  }
+  const payload = { parcelId: this.feedbackTargetParcel.id, rating: Number(this.feedbackForm.rating), comment };
   this.http.post(`${environment.apiUrl}/feedback`, payload).subscribe({ next: () => { this.closeFeedback(); this.showPopup('Feedback submitted', 'Feedback submitted successfully.'); }, error: (err: any) => this.showPopup('Feedback failed', err.error?.message || 'Failed to submit feedback.') });
  }
  openCancel(parcel: any) { this.cancelParcelTarget = parcel; this.cancelReason = ''; this.cancelReasonError = ''; }
@@ -254,15 +260,13 @@ export class UserDashboardComponent implements OnInit {
  private getNormalizedCancelReason(): string { return this.cancelReason.trim().replace(/\s+/g, ' '); }
  private extractCancelReasonError(err: any): string { return err?.error?.data?.fields?.reason || err?.error?.message || 'Failed to cancel parcel.'; }
  downloadInvoice(parcel: any) {
-  const lines = [`INVOICE - Parcel Management System`, `Tracking ID: ${parcel.trackingId}`, `Sender: ${parcel.senderName || parcel.senderUsername}`, `Pickup: ${parcel.pickupAddress} - ${parcel.pickupZipCode}`, `Receiver: ${parcel.receiverName}`, `Drop: ${parcel.dropLocation} - ${parcel.dropZipCode}`, `Weight: ${parcel.weight} g`, `Delivery: ${parcel.deliveryType}`, `Packing: ${parcel.packagingType}`, `Cost: INR ${parcel.cost}`, `Status: ${parcel.status}`, `Pickup Date: ${parcel.pickupDate}`, `Booked: ${new Date(parcel.createdAt).toLocaleString()}`].join('\n');
-  const blob = new Blob([lines], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `Parcel Management System-invoice-${parcel.trackingId}.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
+  this.http.get(`${environment.apiUrl}/parcels/${parcel.id}/invoice`, { responseType: 'blob' }).subscribe({
+   next: (blob: Blob) => this.saveBlob(blob, `parcel-invoice-${parcel.trackingId}.pdf`),
+   error: () => this.showPopup('Invoice failed', 'Could not download the invoice PDF. Please try again.')
+  });
  }
+ sameAddress(a: string, b: string) { return !!a && !!b && a.trim().replace(/\s+/g, ' ').toLowerCase() === b.trim().replace(/\s+/g, ' ').toLowerCase(); }
+ private saveBlob(blob: Blob, filename: string) { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
  showPopup(title: string, message: string) { this.popupTitle = title; this.popupMessage = message; }
  logout() { localStorage.clear(); this.router.navigate(['/']); }
 }

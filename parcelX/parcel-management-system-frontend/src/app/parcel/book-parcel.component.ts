@@ -271,6 +271,11 @@ export class BookParcelComponent implements OnInit {
   if (field === 'dropLocation' && (!value || value.trim().length < 10))
    this.errors.dropLocation = 'Drop address must be at least 10 characters';
 
+  if ((field === 'pickupAddress' || field === 'dropLocation')
+   && this.sameAddress(this.form.pickupAddress, this.form.dropLocation)) {
+   this.errors.dropLocation = 'Sender and receiver addresses cannot be the same';
+  }
+
   if (field === 'pickupZipCode' && !this.isValidZip(value))
    this.errors.pickupZipCode = 'Enter a valid 6-digit Indian PIN code';
 
@@ -338,6 +343,7 @@ export class BookParcelComponent implements OnInit {
  }
 
  isValidZip(value: string) { return /^[1-9][0-9]{5}$/.test(value || ''); }
+ sameAddress(a: string, b: string) { return !!a && !!b && a.trim().replace(/\s+/g, ' ').toLowerCase() === b.trim().replace(/\s+/g, ' ').toLowerCase(); }
  showPopup(title: string, message: string) { this.popupTitle = title; this.popupMessage = message; }
  closePopup() { this.popupMessage = ''; }
  goBack() { this.router.navigate(['/user-dashboard']); }

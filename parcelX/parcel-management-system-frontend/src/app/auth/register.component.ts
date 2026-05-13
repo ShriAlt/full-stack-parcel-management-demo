@@ -138,7 +138,7 @@ import { environment } from '../../environments/environment';
             <input id="acceptPrivacyPolicy" type="checkbox"
               [(ngModel)]="acceptedPrivacyPolicy" name="acceptedPrivacyPolicy"
               (ngModelChange)="validateField('acceptedPrivacyPolicy')" />
-            <span>I accept the privacy policy and agree to the terms of service.</span>
+            <span>I accept the <a href="javascript:void(0)" (click)="openPrivacyPolicy($event)">privacy policy</a> and agree to the terms of service.</span>
           </label>
           <small class="error" *ngIf="errors.acceptedPrivacyPolicy">{{ errors.acceptedPrivacyPolicy }}</small>
         </div>
@@ -171,6 +171,16 @@ import { environment } from '../../environments/environment';
       <button class="close-btn" type="button" (click)="closeAcknowledgement()">Close</button>
       <h2>Registration successful</h2>
       <p>{{ acknowledgementMessage }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="showPrivacyPolicy" class="modal" (click)="showPrivacyPolicy = false">
+    <div class="modal-content policy-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" type="button" (click)="showPrivacyPolicy = false">Close</button>
+      <h2>Privacy Policy</h2>
+      <p>Parcel Management System uses your name, email, phone number, address, and shipment details only to create your account, manage parcel bookings, process payments, send service updates, and support delivery workflows.</p>
+      <p>Payment details are validated securely for the demo payment flow and are not shown in failure messages. Do not share passwords, OTPs, card numbers, CVV, or UPI credentials with anyone.</p>
+      <p>You can update your profile details from the dashboard after registration.</p>
     </div>
   </div>
 
@@ -291,6 +301,7 @@ input:focus, textarea:focus {
 .footer p { margin: 0; }
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000}
 .modal-content{background:white;color:#1f2937;padding:30px;border-radius:10px;max-width:380px;width:90%;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3);text-align:center}
+.policy-modal{max-width:520px;text-align:left;line-height:1.5}
 .close-btn{position:absolute;top:15px;right:15px;background:#f1f5f9;border:1px solid #d1d5db;font-size:12px;cursor:pointer}
 
 `]
@@ -315,6 +326,7 @@ export class RegisterComponent {
  acceptedPrivacyPolicy = false;
  showPassword = false;
  showConfirmPassword = false;
+ showPrivacyPolicy = false;
  successMessage = '';
  errorMessage = '';
  acknowledgementMessage = '';
@@ -340,13 +352,12 @@ export class RegisterComponent {
    this.errors.name = 'Full name can contain only letters and spaces';
   }
 
-  // EMAIL — standard pattern (no restriction on digit-starting local parts)
   const email = this.formData.email.trim();
-  const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  const emailPattern = /^(?!.*\.\.)(?![0-9]+@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/;
   if (!email) {
    this.errors.email = 'Email is required';
   } else if (!emailPattern.test(email)) {
-   this.errors.email = 'Please enter a valid email address (e.g. name@example.com)';
+   this.errors.email = 'Enter a valid email such as name@example.com. It cannot contain consecutive dots or start with only digits.';
   }
 
   // PHONE
@@ -420,14 +431,18 @@ export class RegisterComponent {
    city:      this.formData.city.trim().replace(/\s+/g, ' '),
    state:     this.formData.state.trim().replace(/\s+/g, ' '),
    zipCode:   this.formData.zipCode,
-   role:      'CUSTOMER'
+   role:      'CUSTOMER',
+   acceptedPrivacyPolicy: this.acceptedPrivacyPolicy
   };
 
   this.http.post(`${environment.apiUrl}/auth/register`, payload).subscribe({
 
-   next: () => {
+   next: (response: any) => {
     this.successMessage = 'Account created successfully! Redirecting to login...';
-    this.acknowledgementMessage = 'Your account has been created successfully. Redirecting to login...';
+    const name = response?.name || payload.name;
+    const username = response?.username || payload.username;
+    const email = response?.email || payload.email;
+    this.acknowledgementMessage = `Your account has been created successfully for ${name} (username: ${username}, email: ${email}). Redirecting to login...`;
     setTimeout(() => this.router.navigate(['/login']), 1800);
    },
 
@@ -455,6 +470,11 @@ export class RegisterComponent {
 
  goToLogin() { this.router.navigate(['/login']); }
  goHome()    { this.router.navigate(['/']); }
+ openPrivacyPolicy(event: Event) {
+  event.preventDefault();
+  event.stopPropagation();
+  this.showPrivacyPolicy = true;
+ }
  closeAcknowledgement() {
   this.acknowledgementMessage = '';
   this.router.navigate(['/login']);

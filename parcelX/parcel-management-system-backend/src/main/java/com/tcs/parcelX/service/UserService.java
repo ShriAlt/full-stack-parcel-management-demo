@@ -42,6 +42,12 @@ public class UserService {
         if (request.getZipCode() != null && !ValidationUtil.isValidZipCode(request.getZipCode())) {
             throw new BadRequestException("Pin code must be a valid 6 digit Indian PIN code");
         }
+        if (request.getCity() != null && !ValidationUtil.isValidLocationName(request.getCity())) {
+            throw new BadRequestException("City must contain only letters and spaces, between 3 and 50 characters");
+        }
+        if (request.getState() != null && !ValidationUtil.isValidLocationName(request.getState())) {
+            throw new BadRequestException("State must contain only letters and spaces, between 3 and 50 characters");
+        }
         if (request.getEmail() != null) {
             userRepository.findByEmail(request.getEmail()).ifPresent(existing -> {
                 if (!existing.getId().equals(user.getId())) {
@@ -69,4 +75,3 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 }
-

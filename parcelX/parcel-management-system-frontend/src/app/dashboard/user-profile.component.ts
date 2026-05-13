@@ -271,9 +271,9 @@ export class UserProfileComponent implements OnInit {
   this.errors = {};
 
   const email = String(this.profile.email || '').trim();
-  const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  const emailPattern = /^(?!.*\.\.)(?![0-9]+@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/;
   if (!email)                      this.errors.email = 'Email is required';
-  else if (!emailPattern.test(email)) this.errors.email = 'Please enter a valid email address';
+  else if (!emailPattern.test(email)) this.errors.email = 'Enter a valid email such as name@example.com';
 
   const phone = String(this.profile.phone || '').trim();
   if (!phone)                         this.errors.phone = 'Phone number is required';
