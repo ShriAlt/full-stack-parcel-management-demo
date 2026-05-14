@@ -243,7 +243,7 @@ export class AdminDashboardComponent implements OnInit {
   if (field === 'email' && !/^(?!.*\.\.)(?![0-9]+@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(value)) this.profileErrors.email = 'Enter a valid email such as name@example.com';
   if (field === 'phone' && !/^[6-9]\d{9}$/.test(value)) this.profileErrors.phone = 'Phone must be a valid 10 digit number';
   if (field === 'address' && value.length < 10) this.profileErrors.address = 'Address must contain at least 10 characters';
-  if ((field === 'city' || field === 'state') && !/^[A-Za-z][A-Za-z ]{2,49}$/.test(value)) this.profileErrors[field] = 'Use 3-50 letters and spaces';
+  if ((field === 'city' || field === 'state') && !/^(?=.{3,50}$)[A-Za-z]+(?: [A-Za-z]+)*$/.test(String(this.profile?.[field] || ''))) this.profileErrors[field] = 'Use 3-50 letters with single spaces only';
   if (field === 'zipCode' && !/^[1-9][0-9]{5}$/.test(value)) this.profileErrors.zipCode = 'Pin code must be a valid 6 digit Indian PIN code';
  }
 

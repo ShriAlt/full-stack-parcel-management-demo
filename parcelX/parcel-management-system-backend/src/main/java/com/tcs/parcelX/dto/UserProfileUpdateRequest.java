@@ -19,10 +19,10 @@ public class UserProfileUpdateRequest {
     @Size(min = 10, max = 120, message = "Address must be between 10 and 120 characters")
     private String address;
 
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "City must contain only letters and spaces, between 3 and 50 characters")
+    @Pattern(regexp = "^(?=.{3,50}$)[A-Za-z]+(?: [A-Za-z]+)*$", message = "City must contain only letters and single spaces, between 3 and 50 characters")
     private String city;
 
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "State must contain only letters and spaces, between 3 and 50 characters")
+    @Pattern(regexp = "^(?=.{3,50}$)[A-Za-z]+(?: [A-Za-z]+)*$", message = "State must contain only letters and single spaces, between 3 and 50 characters")
     private String state;
 
     @Pattern(regexp = "^[1-9][0-9]{5}$", message = "Zip code must be a valid 6 digit code")

@@ -34,11 +34,11 @@ public class RegisterRequest {
     private String zipCode;
 
     @NotBlank(message = "State is required")
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "State must contain only letters and spaces, between 3 and 50 characters")
+    @Pattern(regexp = "^(?=.{3,50}$)[A-Za-z]{3,}(?: [A-Za-z]{3,})?$", message = "State must contain only letters, each word must be at least 3 letters, and at most one single space is allowed")
     private String state;
 
     @NotBlank(message = "City is required")
-    @Pattern(regexp = "^[A-Za-z][A-Za-z ]{2,49}$", message = "City must contain only letters and spaces, between 3 and 50 characters")
+    @Pattern(regexp = "^(?=.{3,50}$)[A-Za-z]{3,}(?: [A-Za-z]{3,})?$", message = "City must contain only letters, each word must be at least 3 letters, and at most one single space is allowed")
     private String city;
 
     @NotBlank(message = "Phone is required")

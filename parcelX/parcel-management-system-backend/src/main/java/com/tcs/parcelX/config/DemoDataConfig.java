@@ -2,9 +2,11 @@ package com.tcs.parcelX.config;
 
 import com.tcs.parcelX.entity.Parcel;
 import com.tcs.parcelX.entity.DemoCard;
+import com.tcs.parcelX.entity.Payment;
 import com.tcs.parcelX.entity.User;
 import com.tcs.parcelX.repository.DemoCardRepository;
 import com.tcs.parcelX.repository.ParcelRepository;
+import com.tcs.parcelX.repository.PaymentRepository;
 import com.tcs.parcelX.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +23,7 @@ public class DemoDataConfig {
     CommandLineRunner seedDemoData(UserRepository userRepository,
                                    ParcelRepository parcelRepository,
                                    DemoCardRepository demoCardRepository,
-                                   PasswordEncoder passwordEncoder) {
+                                   PasswordEncoder passwordEncoder, PaymentRepository paymentRepository) {
         return args -> {
             User admin = userRepository.findByUsername("admin")
                     .or(() -> userRepository.findByPhone("9876543210"))
@@ -65,7 +67,7 @@ public class DemoDataConfig {
             }
 
             if (parcelRepository.count() == 0) {
-                parcelRepository.save(
+                Parcel demoParcel = parcelRepository.save(
                         Parcel.builder()
                                 .trackingId(
                                         "TRK-" +
@@ -88,14 +90,41 @@ public class DemoDataConfig {
                                 .packagingType("BASIC")
                                 .cost(136.5)
                                 .pickupDate(LocalDate.now())
-                                .status(Parcel.ParcelStatus.CREATED)
+                                .status(Parcel.ParcelStatus.IN_TRANSIT)
                                 .createdAt(LocalDateTime.now())
                                 .updatedAt(LocalDateTime.now())
                                 .build()
                 );
+                ensureDemoParcelPaid(demoParcel, paymentRepository);
             }
+            parcelRepository.findAll().stream()
+                    .filter(parcel -> "Rahul Sharma".equals(parcel.getSenderName())
+                            && "Aman Verma".equals(parcel.getReceiverName()))
+                    .findFirst()
+                    .ifPresent(parcel -> ensureDemoParcelPaid(parcel, paymentRepository));
             seedDemoCards(demoCardRepository);
         };
+    }
+
+    private void ensureDemoParcelPaid(Parcel parcel, PaymentRepository paymentRepository) {
+        paymentRepository.findByParcelId(parcel.getId()).ifPresentOrElse(existing -> {
+            existing.setAmount(parcel.getCost());
+            existing.setMethod(Payment.PaymentMethod.UPI);
+            existing.setStatus(Payment.PaymentStatus.CONFIRMED);
+            if (existing.getTransactionId() == null || existing.getTransactionId().isBlank()) {
+                existing.setTransactionId("DEMO-PAID-" + System.currentTimeMillis());
+            }
+            existing.setUpdatedAt(LocalDateTime.now());
+            paymentRepository.save(existing);
+        }, () -> paymentRepository.save(Payment.builder()
+                .parcel(parcel)
+                .amount(parcel.getCost())
+                .method(Payment.PaymentMethod.UPI)
+                .status(Payment.PaymentStatus.CONFIRMED)
+                .transactionId("DEMO-PAID-" + System.currentTimeMillis())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build()));
     }
 
     private void seedDemoCards(DemoCardRepository demoCardRepository) {

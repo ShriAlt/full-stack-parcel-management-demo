@@ -134,12 +134,10 @@ import { environment } from '../../environments/environment';
         </div>
 
         <div class="policy-group">
-          <label class="policy-label" for="acceptPrivacyPolicy">
-            <input id="acceptPrivacyPolicy" type="checkbox"
-              [(ngModel)]="acceptedPrivacyPolicy" name="acceptedPrivacyPolicy"
-              (ngModelChange)="validateField('acceptedPrivacyPolicy')" />
-            <span>I accept the <a href="javascript:void(0)" (click)="openPrivacyPolicy($event)">privacy policy</a> and agree to the terms of service.</span>
-          </label>
+          <button type="button" class="policy-review-btn" (click)="openPrivacyPolicy($event)">
+            {{ acceptedPrivacyPolicy ? 'Privacy policy accepted' : 'Review and accept privacy policy' }}
+          </button>
+          <small class="hint" *ngIf="acceptedPrivacyPolicy">You accepted the privacy policy for this registration.</small>
           <small class="error" *ngIf="errors.acceptedPrivacyPolicy">{{ errors.acceptedPrivacyPolicy }}</small>
         </div>
 
@@ -168,9 +166,9 @@ import { environment } from '../../environments/environment';
 
   <div *ngIf="acknowledgementMessage" class="modal" (click)="closeAcknowledgement()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" type="button" (click)="closeAcknowledgement()">Close</button>
       <h2>Registration successful</h2>
       <p>{{ acknowledgementMessage }}</p>
+      <small class="hint">Redirecting to login in {{ ackSecondsRemaining }} seconds...</small>
     </div>
   </div>
 
@@ -178,9 +176,16 @@ import { environment } from '../../environments/environment';
     <div class="modal-content policy-modal" (click)="$event.stopPropagation()">
       <button class="close-btn" type="button" (click)="showPrivacyPolicy = false">Close</button>
       <h2>Privacy Policy</h2>
-      <p>Parcel Management System uses your name, email, phone number, address, and shipment details only to create your account, manage parcel bookings, process payments, send service updates, and support delivery workflows.</p>
-      <p>Payment details are validated securely for the demo payment flow and are not shown in failure messages. Do not share passwords, OTPs, card numbers, CVV, or UPI credentials with anyone.</p>
-      <p>You can update your profile details from the dashboard after registration.</p>
+      <div class="policy-scroll" (scroll)="onPrivacyScroll($event)">
+        <p>Parcel Management System uses your name, email, phone number, address, and shipment details only to create your account, manage parcel bookings, process payments, send service updates, and support delivery workflows.</p>
+        <p>Your account data is used to identify you in the application, show your parcel history, calculate invoice details, and help admins manage delivery status. Your contact details are used only for parcel-related workflows in this demo system.</p>
+        <p>Payment details are validated securely for the demo payment flow and are not shown in failure messages. Do not share passwords, OTPs, card numbers, CVV, or UPI credentials with anyone.</p>
+        <p>We keep only the information needed for this parcel management demo. You can update your profile details from the dashboard after registration.</p>
+        <p>By accepting this policy, you confirm that the registration details are accurate and that Parcel Management System may use them for account, booking, payment, invoice, and delivery operations inside this application.</p>
+      </div>
+      <button type="button" class="policy-accept-btn" [disabled]="!privacyPolicyScrolled" (click)="acceptPrivacyPolicy()">
+        {{ privacyPolicyScrolled ? 'Accept Privacy Policy' : 'Scroll to the bottom to accept' }}
+      </button>
     </div>
   </div>
 
@@ -254,9 +259,11 @@ input:focus, textarea:focus {
 .input-group { display: flex; align-items: stretch; }
 .form-control { border-right: none !important; border-radius: 5px 0 0 5px !important; }
 .policy-group { margin-bottom: 20px; }
-.policy-label { display: flex; align-items: flex-start; gap: 10px; font-weight: normal; line-height: 1.45; color: #334155; }
-.policy-label input { width: 16px; height: 16px; margin-top: 3px; flex: 0 0 auto; }
-.policy-label span { flex: 1; }
+.policy-review-btn,.policy-accept-btn{width:100%;padding:12px;border-radius:5px;border:1px solid #334155;background:white;color:#1f2937;font-weight:700;cursor:pointer}
+.policy-review-btn:hover{background:#f8fafc}
+.policy-accept-btn:hover:not(:disabled){background:#f8fafc;color:#1f2937}
+.policy-accept-btn{margin-top:14px;background:#1f2937;color:white}
+.policy-accept-btn:disabled,.close-btn:disabled{opacity:.55;cursor:not-allowed}
 
 .eye-icon {
   cursor: pointer;
@@ -302,6 +309,7 @@ input:focus, textarea:focus {
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000}
 .modal-content{background:white;color:#1f2937;padding:30px;border-radius:10px;max-width:380px;width:90%;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.3);text-align:center}
 .policy-modal{max-width:520px;text-align:left;line-height:1.5}
+.policy-scroll{max-height:260px;overflow-y:auto;padding:0 12px 0 0;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
 .close-btn{position:absolute;top:15px;right:15px;background:#f1f5f9;border:1px solid #d1d5db;font-size:12px;cursor:pointer}
 
 `]
@@ -327,6 +335,8 @@ export class RegisterComponent {
  showPassword = false;
  showConfirmPassword = false;
  showPrivacyPolicy = false;
+ privacyPolicyScrolled = false;
+ ackSecondsRemaining = 5;
  successMessage = '';
  errorMessage = '';
  acknowledgementMessage = '';
@@ -372,22 +382,18 @@ export class RegisterComponent {
    this.errors.address = 'Address must contain at least 10 characters';
   }
 
-  const city = this.formData.city.trim().replace(/\s+/g, ' ');
+  const city = this.formData.city.trim();
   if (!city) {
    this.errors.city = 'City is required';
-  } else if (city.length < 3) {
-   this.errors.city = 'City name must contain at least 3 characters';
-  } else if (!/^[A-Za-z ]+$/.test(city)) {
-   this.errors.city = 'City can contain only letters and spaces';
+  } else if (!/^(?=.{3,50}$)[A-Za-z]{3,}(?: [A-Za-z]{3,})?$/.test(city)) {
+   this.errors.city = 'City must be 3-50 letters, with each word at least 3 letters and at most one single space';
   }
 
-  const state = this.formData.state.trim().replace(/\s+/g, ' ');
+  const state = this.formData.state.trim();
   if (!state) {
    this.errors.state = 'State is required';
-  } else if (state.length < 3) {
-   this.errors.state = 'State name must contain at least 3 characters';
-  } else if (!/^[A-Za-z ]+$/.test(state)) {
-   this.errors.state = 'State can contain only letters and spaces';
+  } else if (!/^(?=.{3,50}$)[A-Za-z]{3,}(?: [A-Za-z]{3,})?$/.test(state)) {
+   this.errors.state = 'State must be 3-50 letters, with each word at least 3 letters and at most one single space';
   }
 
   if (!/^[1-9][0-9]{5}$/.test(this.formData.zipCode)) {
@@ -438,12 +444,11 @@ export class RegisterComponent {
   this.http.post(`${environment.apiUrl}/auth/register`, payload).subscribe({
 
    next: (response: any) => {
-    this.successMessage = 'Account created successfully! Redirecting to login...';
+   this.successMessage = 'Account created successfully! Redirecting to login...';
     const name = response?.name || payload.name;
-    const username = response?.username || payload.username;
     const email = response?.email || payload.email;
-    this.acknowledgementMessage = `Your account has been created successfully for ${name} (username: ${username}, email: ${email}). Redirecting to login...`;
-    setTimeout(() => this.router.navigate(['/login']), 1800);
+    this.acknowledgementMessage = `Full name: ${name}. Email: ${email}.`;
+    this.startAcknowledgementTimer();
    },
 
    error: (error: any) => {
@@ -473,11 +478,31 @@ export class RegisterComponent {
  openPrivacyPolicy(event: Event) {
   event.preventDefault();
   event.stopPropagation();
+  this.privacyPolicyScrolled = this.acceptedPrivacyPolicy;
   this.showPrivacyPolicy = true;
  }
+ onPrivacyScroll(event: Event) {
+  const target = event.target as HTMLElement;
+  this.privacyPolicyScrolled = target.scrollTop + target.clientHeight >= target.scrollHeight - 4;
+ }
+ acceptPrivacyPolicy() {
+  if (!this.privacyPolicyScrolled) return;
+  this.acceptedPrivacyPolicy = true;
+  delete this.errors.acceptedPrivacyPolicy;
+  this.showPrivacyPolicy = false;
+ }
+ startAcknowledgementTimer() {
+  this.ackSecondsRemaining = 5;
+  const interval = setInterval(() => {
+   this.ackSecondsRemaining -= 1;
+   if (this.ackSecondsRemaining <= 0) {
+    clearInterval(interval);
+    this.router.navigate(['/login']);
+   }
+  }, 1000);
+ }
  closeAcknowledgement() {
-  this.acknowledgementMessage = '';
-  this.router.navigate(['/login']);
+  return;
  }
 
  limitDigits(field: keyof typeof this.formData, length: number): void {
