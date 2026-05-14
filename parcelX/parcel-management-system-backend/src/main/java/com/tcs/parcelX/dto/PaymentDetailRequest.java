@@ -28,6 +28,6 @@ public class PaymentDetailRequest {
     @Pattern(regexp = "^[1-9][0-9]{2}$", message = "CVV must contain 3 digits and cannot start with 0")
     private String cvv;
 
-    @Pattern(regexp = "^[a-zA-Z0-9._-]+@[a-zA-Z]{3,}$", message = "UPI ID format is invalid")
+    @Pattern(regexp = "^[a-zA-Z0-9._-]+@(oksbi|okhdfcbank|okaxis|okicici|paytm|ybl)$", message = "UPI ID must end with a supported suffix such as oksbi, okhdfcbank, okaxis, okicici, paytm, or ybl")
     private String upiId;
 }

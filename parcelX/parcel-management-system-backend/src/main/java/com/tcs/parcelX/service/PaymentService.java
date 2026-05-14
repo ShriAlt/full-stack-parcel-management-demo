@@ -39,7 +39,6 @@ public class PaymentService {
         } catch (IllegalArgumentException ex) {
             throw new BadRequestException("Invalid payment method");
         }
-
         DemoCard demoCard = null;
         switch (method) {
             case CREDIT_CARD:
